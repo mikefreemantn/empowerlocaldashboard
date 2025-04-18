@@ -1,0 +1,715 @@
+﻿Administrative User Flows for EmpowerLocal Dashboard
+
+
+Administrative User Flows for EmpowerLocal Dashboard        1
+Company Management Flows        1
+Create/Edit Company Flow        2
+Company-Publication Association Flow        2
+Publication Management Flows        3
+Publication Base Creation Flow        3
+Publication Approval Workflow (Super Admin) - future if publications are allowed to do it themselves        4
+Profile Management Flows        5
+Publication Profile Setup Flow        5
+Media Kit Management Flow        6
+Audience Management Flows        6
+Social Media Platform Connection Flow        6
+Email Newsletter Configuration Flow        7
+Web Analytics Connection Flow        8
+Inventory Management Flows        10
+Inventory Creation Flow        10
+Inventory Analytics Review Flow        11
+Lead Management Flow (Publication-Specific)        12
+Team Management Flows        15
+Team Member Invitation Flow        15
+Role & Permission Configuration Flow (Super Admin)        16
+System Configuration Flows        17
+System Settings Configuration Flow (Super Admin)        17
+API Configuration Flow (Super Admin)        18
+Company Management Flows
+Create/Edit Company Flow - (already built in core dashboard)
+1. Access Company Management
+   * Admin navigates to Companies section in dashboard
+   * System displays list of existing companies with search/filter options
+2. Initiate Company Creation
+   * Admin clicks "Add New Company" button
+   * System displays company creation form
+3. Enter Company Details
+   * Admin enters required fields:
+      * Company name
+      * Address (street, city, state, zip)
+      * Phone number
+      * D&B number (if applicable)
+   * System validates entries in real-time
+4. Review and Submit
+   * Admin reviews all entered information
+   * System displays validation summary
+   * Admin clicks "Create Company" button
+   * System creates record and confirms success
+5. Post-Creation Actions
+   * System displays new company detail view
+   * Admin has options to:
+      * Add publications to company
+      * Invite team members
+      * Set up billing information
+      * Return to company list
+Company-Publication Association Flow - (already built in core dashboard)
+1. Select Company
+   * Admin navigates to company detail page
+   * System displays current company information and associated publications
+2. Manage Publications
+   * Admin clicks "Manage Publications" button
+   * System displays modal with two options:
+      * Current associated publications
+      * Available publications to add
+3. Add Publication Association
+   * Admin selects publications from available list
+   * System validates selections for conflicts
+   * Admin confirms selections
+4. Remove Publication Association
+   * Admin selects publications to remove from current list
+   * System shows warning for active publications
+   * Admin confirms removal
+   * System updates associations
+5. Create New Publication for Company
+   * Admin clicks "Create New Publication" button
+   * System pre-fills company information in publication creation form
+   * Flow continues to Publication Creation flow
+Publication Management Flows- (already built in core dashboard)
+Publication Base Creation Flow
+1. Initiate Publication Creation
+   * Admin navigates to Publications section
+   * Admin clicks "Add New Publication" button
+   * System displays publication creation wizard
+2. Step 1: Basic Information
+   * Admin enters:
+      * Website Url
+      * Publication title
+      * Description
+      * Select associated company (or create new)
+   * System validates entries and checks for duplicate domains
+   * Admin clicks "Next" to proceed
+3. Step 2: Contact Information
+   * Admin enters:
+      * Contact first name
+      * Contact last name
+      * Email address
+      * Phone number
+   * System validates contact information
+   * Admin clicks "Next" to proceed
+4. Step 3: Categorization
+   * Admin selects:
+      * Primary category
+      * Additional categories
+      * Relevant brands
+   * System shows preview of categorization
+   * Admin clicks "Next" to proceed
+5. Step 4: Media Kit & Additional Info
+   * Admin uploads media kit (PDF) or provides URL
+   * Admin enters notes about publication
+   * Admin selects CMS platform
+   * Admin clicks "Next" to proceed
+6. Step 5: Review & Create
+   * System displays complete summary of publication details
+   * Admin reviews all information
+   * Admin clicks "Create Publication" button
+   * System creates record and confirms success
+7. Post-Creation Options
+   * Admin is prompted to:
+      * Set up publication profile immediately
+      * Configure inventory items
+      * Invite team members
+      * Return to publications list
+Publication Approval Workflow (Super Admin) - future if publications are allowed to do it themselves
+1. Review Pending Publications
+   * Super Admin navigates to "Pending Approvals" section
+   * System displays list of publications awaiting approval
+   * Super Admin selects publication to review
+2. Detailed Review
+   * System displays comprehensive publication information
+   * Super Admin reviews:
+      * Company details and verification status
+      * Publication information and categories
+      * Domain verification status
+      * Uploaded media kit and assets
+      * Contact information
+3. Verification Checklist
+   * Super Admin completes verification checklist:
+      * Domain ownership verified
+      * Content reviewed for quality and appropriateness
+      * Company legitimacy confirmed
+      * Media kit reviewed
+      * Categories appropriately assigned
+   * System tracks completion status of each item
+4. Approval Decision
+   * Super Admin selects decision:
+      * Approve
+      * Reject
+      * Request more information
+   * Admin enters comments explaining decision
+   * System records decision and comments
+5. Post-Decision Actions
+   * If approved:
+      * System changes publication status to "Active"
+      * Notification sent to publication admin
+      * Publication appears in network explorer
+   * If rejected:
+      * System changes status to "Rejected"
+      * Notification with feedback sent to publisher
+   * If more info requested:
+      * System sets status to "Pending Additional Information"
+      * Specific requests sent to publisher
+Profile Management Flows
+Publication Profile Setup Flow
+1. Access Profile Management
+   * Admin navigates to publication details or from transition from Base Publication setup
+   * Admin selects "Edit Profile" tab
+   * System displays profile editor with sections
+2. Branding Configuration
+   * Admin uploads:
+      * Logo (required)
+      * Header image (recommended)
+      * Alternative image (optional)
+      * Phase II for Public Storefront
+         1. OG image for social sharing (recommended)
+         2. Favicon (optional)
+   * System processes images and shows previews
+   * Admin confirms image selections
+3. Color Scheme Setup
+   * Admin selects:
+      * Primary color (with color picker)
+      * Secondary color
+      * Accent color
+   * System shows live preview of colors applied to interface elements
+      * Do we show color palettes that are complementary to primary color?
+   * Admin confirms color scheme
+4. General Information Configuration
+   * Admin enters/selects:
+      * Interests (multiple selection)
+      * Demographics details (age ranges, income, education)
+      * Categories (multiple selection)
+      * Brand categories (multiple selection)
+   * System validates and saves each section
+5. Preview & Publish Profile
+   * System shows complete profile preview
+   * Admin reviews all sections
+   * Admin clicks "Publish Profile" button
+   * System updates profile and confirms success
+6. Profile Completion Tracking
+   * System shows profile completion percentage
+   * Admin sees suggestions for improving profile
+   * Admin can navigate directly to incomplete sections
+Media Kit Management Flow
+In addition the media could be used to design and build out the profile settings in an automated way
+1. Access Media Kit Section
+   * Admin navigates to publication details
+   * Admin selects "Media Kit" tab
+   * System displays current media kit status
+2. Upload Media Kit
+   * Admin clicks "Upload Media Kit" button
+   * Admin selects PDF file from device
+   * System validates file (type, size)
+   * System processes upload and generates preview
+3. Media Kit URL Option
+   * Alternative: Admin enters URL to external media kit
+   * System validates URL accessibility
+   * Admin confirms URL is correct
+4. Review & Confirm
+   * System displays media kit preview (if PDF)
+   * Admin confirms upload or URL
+   * System saves media kit information
+5. Update Existing Media Kit
+   * Admin views current media kit
+   * Admin clicks "Update" button
+   * Admin follows upload or URL flow again
+   * System confirms replacement
+Audience Management Flows
+Social Media Platform Connection Flow
+1. Access Social Platforms
+   * Admin navigates to publication audience section
+   * Admin selects "Social Media" tab
+   * System displays current connected platforms and options to add more
+2. Add Platform Connection
+   * Admin clicks "Add Platform" button
+   * Admin selects platform from options (X, Facebook, Instagram, YouTube, etc.)
+   * System displays connection form for selected platform
+3. Enter Platform Details
+   * Admin enters platform-specific information:
+      * Account handle/username
+      * Account URL
+      * Account ID (if applicable)
+   * System validates basic format of entered information
+4. Enter Audience Metrics
+   * Admin enters current metrics manually (optional):
+      * Follower/subscriber count
+      * Average engagement rate (if known)
+      * Platform-specific metrics (views, likes, etc.)
+   * System stores metrics with date stamp
+5. Backend Verification Process
+   * System attempts to verify entered data through backend APIs:
+      * Uses aggregator services for initial verification
+      * Falls back to direct platform APIs as needed
+      * Performs periodic validation based on cost-optimized schedule
+   * If verification succeeds:
+      * System marks metrics as "Verified"
+      * Updates metrics automatically based on API data
+   * If verification cannot be completed:
+      * System keeps metrics as "Publisher Reported"
+      * Admin receives notification that manual updates will be needed
+6. Metrics Management
+   * Admin can:
+      * View last verification attempt and status
+      * Manually update metrics if automated verification isn't available
+      * Request on-demand verification (limited frequency)
+   * System tracks metrics history with clear indication of verification status
+7. Metrics Display & Integration
+   * Verified metrics are displayed in publisher profile
+   * Publisher-reported metrics are shown with appropriate labeling
+   * System combines metrics across platforms for total social reach
+   * Performance metrics are included in analytics dashboards with verification status clearly indicated
+Email Newsletter Configuration Flow
+1. Access Newsletter Management
+   * Admin navigates to audience section
+   * Admin selects "Newsletters" tab
+   * System displays existing newsletters and add option
+2. Add Newsletter
+   * Admin clicks "Add Newsletter" button
+   * System displays newsletter creation form
+3. Enter Newsletter Details
+   * Admin enters:
+      * Newsletter name
+      * Description
+      * Frequency (Daily, Weekly, Monthly, etc.)
+      * Number of subscribers
+      * Average open rate
+      * Average click-to-open rate
+   * System validates entries in real-time
+4. Upload Newsletter Example
+   * Admin uploads sample newsletter or screenshot
+   * System processes and displays preview
+   * Admin confirms upload
+5. ESP Integration Option
+   * Admin selects email service provider (optional)
+   * Admin completes ESP-specific connection flow
+   * System validates connection and imports metrics
+   * Admin confirms imported data
+6. Save & Manage
+   * Admin reviews all newsletter information
+   * Admin clicks "Save Newsletter" button
+   * System adds newsletter to publication profile
+   * Admin can edit, delete, or add more newsletters
+Web Analytics Connection Flow
+1. Access Analytics Settings
+   * Admin navigates to audience section
+   * Admin selects "Web Analytics" tab
+   * System shows current analytics status and connection options
+2. Select Analytics Method
+   * System presents two primary options:
+      * RECOMMENDED: EmpowerLocal Pixel (highlighted as preferred)
+      * Manual Metrics Entry
+      * Third-party Integration (Google Analytics, etc.) - future but probably not going to do this
+   * Admin selects the EmpowerLocal Pixel option
+3. EmpowerLocal Pixel Implementation
+   * System generates unique pixel code for the publication
+   * System provides clear installation instructions:
+      * Code snippet to add to the website header
+      * WordPress plugin option (if applicable)
+      * Implementation verification steps
+   * System displays copy-to-clipboard functionality for easy implementation
+4. Implementation Verification
+   * Admin implements pixel on their website
+   * Admin clicks "Verify Installation" button
+   * System checks for proper pixel implementation
+   * System confirms successful installation or provides troubleshooting guidance
+5. Data Collection Configuration
+   * Admin configures data collection preferences:
+      * Traffic volume (required)
+      * User demographics (recommended)
+      * Content categories (recommended)
+      * Geographic distribution (recommended)
+   * System explains how each data category will benefit the publisher's profile
+6. Alternative: Manual Metrics Entry
+   * If pixel cannot be implemented immediately:
+      * Admin clicks "Enter Estimated Metrics" option
+      * Admin enters:
+         * Estimated monthly visitors
+         * Estimated monthly page views
+         * Average time on site
+         * Primary traffic sources (%) - probably optional
+      * System clearly marks these as "Publisher Reported" metrics
+      * System displays prompt encouraging pixel implementation for verified metrics
+7. Analytics Dashboard Activation
+   * Upon successful pixel implementation:
+      * System begins collecting real-time data
+      * Admin sees initial data within 24-48 hours
+      * System shows data collection status and completeness
+   * For manual metrics:
+      * System displays estimated metrics with "unverified" indicator
+      * Admin receives periodic reminders to implement pixel
+8. Data Visualization & Insights
+   * Once data collection begins:
+      * Admin can view audience insights dashboard
+      * System highlights key metrics relevant to advertisers
+      * System provides competitive benchmarking
+      * Admin can generate reports for internal use
+Add print + podcasts + events to audience
+**Shawn to add Print / Podcast / Events metrics**
+Inventory Management Flows
+Inventory Creation Flow
+1. Access Inventory Management
+   * Admin navigates to publication details
+   * Admin selects "Inventory" tab
+   * System displays existing inventory and organization options
+2. Initiate Inventory Creation
+   * Admin clicks "Add Inventory Item" button
+   * System prompts for inventory type selection
+   * Admin selects type (Web, Print, Newsletter, Social, Podcast, Event)
+3. Enter Core Details
+   * Admin enters common details:
+      * Inventory name
+      * Description
+      * Position/placement information
+   * System validates entries
+4. Type-Specific Details Configuration
+   * For Web Inventory:
+      * Admin specifies size(s)
+      * Admin uploads example/mockup
+      * Admin enters available impression count (if applicable) - probably not going to be used
+   * For Print Inventory:
+      * Admin selects issue options
+      * Admin enters ad sizes
+      * Admin specifies frequency options
+   * For Newsletter Inventory:
+      * Admin creates new
+      * Admin specifies placement options
+      * Admin selects frequency
+   * For Social Inventory:
+      * Admin selects platform
+      * Admin specifies post type
+   * For Podcast Inventory:
+      * Admin selects platform(s)
+      * Admin specifies episode options
+      * Admin enters host-read or produced options
+   * For Event Inventory:
+      * Admin enters event details
+      * Admin specifies sponsorship type
+      * Admin enters date and location information
+5. Pricing Configuration
+   * Admin enters pricing information for inventory item:
+      * Base price
+      * Pricing model (flat, CPM, etc.)
+      * Minimum purchase requirements
+      * Quantity/frequency discounts (if applicable)
+   * System validates pricing structure
+6. Availability Settings
+   * Admin sets inventory status (Active, Coming Soon, Sold Out)
+   * Admin configures date restrictions (if applicable)
+   * Admin sets quantity limitations (if applicable)
+   * System saves availability settings
+7. Review & Publish
+   * System displays complete inventory item preview
+   * Admin reviews all details
+   * Admin clicks "Publish Inventory" button
+   * System makes inventory available in network
+Audience Analytics Review Flow
+1. Access Audience Analytics
+   * Admin navigates to audience section
+   * Admin clicks on analytics tab or icon
+   * System displays analytics dashboard for audiences
+2. View Performance Summary
+   * Admin sees high-level metrics:
+      * Total impressions/utilization
+      * Average performance by channel
+      * Future
+         1. Top-performing items
+         2. Underperforming items
+   * Admin can adjust date range for analysis
+3. Drill Down by Item
+   * Admin selects specific inventory item
+   * System displays detailed metrics:
+      * Historical performance
+      * Comparative performance
+      * Campaign-specific performance
+      * Conversion metrics (if available)
+4. Generate Reports
+   * Admin selects report type:
+      * Performance summary
+      * Channel comparison
+      * Trend analysis
+      * Revenue report
+   * Admin configures report parameters
+   * System generates downloadable report
+5. Apply Insights
+   * System provides optimization recommendations
+   * Admin can navigate directly to inventory editor
+   * Admin applies recommended changes
+   * System tracks changes for future analysis
+Lead Management Flow (Publication-Specific) (called orders in loveable example)
+1. Access Lead Management
+   * Admin navigates to publication dashboard
+   * Admin selects "Leads" tab in navigation
+   * System displays lead management interface with status filters
+   * Admin can view leads in different states (New, In Progress, Qualified, Closed)
+2. Review New Lead
+   * Admin clicks on new lead from the list
+   * System displays lead detail view with tabbed sections
+   * Lead information shows:
+      * Contact details panel (name, email, phone, company)
+      * Submission metadata (date/time, source page, UTM parameters)
+      * Interest indicators (selected inventory types, budget range)
+      * Any comments or requirements submitted with form
+3. Lead Qualification
+   * Admin reviews lead information
+   * Admin selects "Qualify Lead" button
+   * System displays qualification modal with options:
+      * Lead priority dropdown (High, Medium, Low)
+      * Qualification status options (Qualified, Needs Info, Not Qualified)
+      * Assignment dropdown for team members
+      * Notes field for qualification rationale
+   * Admin completes qualification fields
+   * Admin clicks "Save Qualification" button
+   * System updates lead status and notifies assigned team member
+4. Inventory Matching
+   * Admin clicks "Match Inventory" tab in lead detail view
+   * System displays two-panel interface:
+      * Left panel: Lead preferences and requirements
+      * Right panel: Publication's available inventory items with filters
+   * Admin applies filters based on lead interests:
+      * Inventory type (display, newsletter, events, etc.)
+      * Placement options
+      * Date range availability
+   * System shows matching inventory items
+   * Admin selects relevant items and clicks "Add to Lead" button
+   * Selected inventory appears in "Matched Inventory" section
+   * Admin can adjust quantities or remove items as needed
+5. Lead Activity Tracking
+   * Admin clicks "Activity" tab in lead detail view
+   * System displays activity timeline with all interactions
+   * Admin clicks "Log Activity" button
+   * System shows activity logging modal with:
+      * Activity type dropdown (Call, Email, Meeting, Note)
+      * Date/time fields (defaults to current)
+      * Description field for details
+      * Outcome dropdown (Positive, Neutral, Negative)
+      * Next steps field
+   * Admin completes activity details and clicks "Save Activity"
+   * System adds entry to activity timeline
+6. Communication Management
+   * Admin clicks "Communications" tab in lead detail view
+   * System displays email interface with template options
+   * Admin selects appropriate template based on lead stage
+   * System populates template with lead data and matched inventory
+   * Admin customizes email content in rich text editor
+   * Admin can add attachments or links to creative examples
+   * Admin clicks "Send Email" button
+   * System sends email and records in activity timeline
+   * Email responses are captured and displayed in communication thread
+7. Proposal Generation
+   * Admin clicks "Create Proposal" button in lead actions menu
+   * System opens proposal builder interface with publication branding
+   * Previously matched inventory items appear pre-selected
+   * Admin configures each inventory item:
+      * Select specific placements/positions
+      * Set date ranges from calendar picker
+      * Enter quantities or impression levels
+      * Apply standard or custom pricing
+   * Admin adds proposal introduction text and terms
+   * System generates real-time preview of proposal
+   * Admin clicks "Generate Proposal" button
+   * System creates professional PDF with publication branding
+   * Admin can:
+      * Download proposal
+      * Email directly to lead
+      * Get shareable link
+      * Save to lead record
+8. Follow-up Management
+   * Admin clicks "Tasks" tab in lead detail view
+   * System displays current tasks and completion status
+   * Admin clicks "Create Task" button
+   * System shows task creation modal with:
+      * Task description field
+      * Due date selector
+      * Assignee dropdown
+      * Priority selector
+      * Reminder settings
+   * Admin completes task details and clicks "Create Task"
+   * System adds task to lead record and sets reminders
+   * When task is completed, admin marks as complete
+   * System records completion in activity timeline
+9. Lead Status Updates
+   * Admin clicks "Status" dropdown in lead header
+   * System displays available status options:
+      * New (default for incoming leads)
+      * In Discussion (active conversations)
+      * Proposal Sent (awaiting response)
+      * Negotiation (adjusting terms)
+      * Closed Won (converted to campaign)
+      * Closed Lost (not proceeding)
+   * Admin selects appropriate status
+   * For Closed statuses, system prompts for reason
+   * Admin enters reason and any final notes
+   * System updates status with timestamp and reason
+10. Campaign Conversion
+   * For qualified leads with accepted proposals, admin clicks "Convert to Campaign" button
+   * System displays campaign creation interface pre-populated with lead information
+   * Admin reviews and confirms:
+      * Campaign name (default: lead name + date)
+      * Selected inventory items and placements
+      * Final pricing and schedule
+      * Creative requirements and deadlines
+   * Admin clicks "Create Campaign" button
+   * System creates new campaign record linked to lead
+   * Lead status automatically updates to "Closed Won"
+   * System generates notifications to relevant team members
+   * Admin is redirected to new campaign management interface
+11. Lead Reporting & Analytics
+   * Admin navigates to publication analytics section
+   * Admin selects "Lead Reports" from menu
+   * System displays reporting dashboard with:
+      * Conversion funnel visualization
+      * Lead source breakdown chart
+      * Status distribution pie chart
+      * Timeline of lead activity
+   * Admin can:
+      * Select date range from calendar picker
+      * Filter by lead sources or team members
+      * Group by different attributes
+      * Export data in CSV or Excel format
+   * System provides key metrics prominently:
+      * Total lead count
+      * Conversion rate
+      * Average time to qualification
+      * Average time to close
+      * Revenue from converted leads
+Team Management Flows
+Team Member Invitation Flow
+1. Access Team Management
+   * Admin navigates to organization settings
+   * Admin selects "Team" tab
+   * System displays current team members and roles
+2. Initiate Invitation
+   * Admin clicks "Invite Team Member" button
+   * System displays invitation form
+3. Configure Invitation
+   * Admin enters:
+      * Email address
+      * Name (optional)
+      * Role selection
+      * Publication access (for multi-publication companies)
+      * Custom welcome message (optional)
+   * System validates email format
+4. Set Permissions
+   * Admin selects permission level:
+      * Admin (full access)
+      * Editor (can edit but not delete)
+      * Viewer (read-only access)
+   * For custom permissions:
+      * Admin uses permission matrix to set specific capabilities
+      * System shows permission preview
+5. Review & Send Invitation
+   * System displays invitation summary
+   * Admin reviews all settings
+   * Admin clicks "Send Invitation" button
+   * System sends email invitation
+6. Manage Pending Invitations
+   * System adds invitation to "Pending" section
+   * Admin can:
+      * Resend invitation
+      * Cancel invitation
+      * Edit invitation details
+   * System tracks invitation status
+Role & Permission Configuration Flow (Super Admin)
+1. Access Role Management
+   * Super Admin navigates to system settings
+   * Super Admin selects "Roles & Permissions" tab
+   * System displays existing roles and permission matrix
+2. Create New Role
+   * Super Admin clicks "Create Role" button
+   * System displays role creation form
+3. Configure Role
+   * Super Admin enters:
+      * Role name
+      * Description
+      * Base role (optional, to inherit permissions)
+   * Super Admin configures permission matrix:
+      * Entity-level permissions (Publications, Companies, Users, etc.)
+      * Action-level permissions (View, Create, Edit, Delete, Approve)
+      * Feature-specific permissions
+   * System validates for permission conflicts
+4. Review & Create Role
+   * System displays role summary with permissions
+   * Super Admin reviews configuration
+   * Super Admin clicks "Create Role" button
+   * System adds role to available options
+5. Assign Role to Users
+   * Super Admin navigates to user management
+   * Super Admin selects users to assign role
+   * Super Admin applies role to selected users
+   * System updates user permissions
+6. Update Existing Role
+   * Super Admin selects existing role
+   * Super Admin modifies permissions
+   * System shows users affected by change
+   * Super Admin confirms update
+   * System applies changes and notifies affected users
+System Configuration Flows
+System Settings Configuration Flow (Super Admin)
+1. Access System Settings
+   * Super Admin navigates to system settings section
+   * System displays settings categories
+   * Super Admin selects category to configure
+2. General Settings
+   * Super Admin configures:
+      * Platform name/branding
+      * Default language/locale
+      * Date/time format
+      * Default currency
+   * System saves changes immediately
+3. Security Settings
+   * Super Admin configures:
+      * Password policies
+      * Session timeout settings
+      * Two-factor authentication requirements - future planning
+      * IP restrictions (if applicable)
+   * System validates security settings
+4. Integration Settings
+   * Super Admin configures:
+      * API credentials
+      * Third-party integrations
+      * Data sharing permissions
+      * Integration health monitoring
+   * System validates integration connections
+5. Publication Defaults
+   * Super Admin configures:
+      * Default publication settings
+      * Required fields
+      * Approval workflow settings
+      * Auto-approval conditions
+   * System applies settings to new publications
+API Configuration Flow (Super Admin)
+1. Access API Settings
+   * Super Admin navigates to system settings
+   * Super Admin selects "API & Integrations" tab
+   * System displays API configuration options
+2. Create API Credentials
+   * Super Admin clicks "Create API Key" button
+   * System displays API key creation form
+3. Configure API Access
+   * Super Admin enters:
+      * Key name/description
+      * Access scope (endpoints)
+      * Rate limits
+      * IP restrictions (optional)
+   * System validates configuration
+4. Generate & Secure Key
+   * System generates API credentials
+   * System displays key with security warning
+   * Super Admin copies key securely
+   * System masks key for future reference
+5. Manage Existing Keys
+   * Super Admin views list of active API keys
+   * Super Admin can:
+      * Revoke keys
+      * Modify access scopes
+      * View usage metrics
+      * Set expiration dates
+   * System tracks all key modifications

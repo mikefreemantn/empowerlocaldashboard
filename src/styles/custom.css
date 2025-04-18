@@ -1,0 +1,54 @@
+/* Custom styles to enforce the new theme */
+:root {
+  --brand-primary: #2868C3;
+  --brand-primary-alt: #25A87E;
+  --brand-navy: #0A2756;
+  --brand-background: #F8FAFC;
+  --brand-gold: #F59E0B;
+  --brand-coral: #F97316;
+  --brand-terracotta: #C2410C;
+}
+
+/* Primary gradient button */
+.chakra-button[data-variant="primary"] {
+  background: linear-gradient(90deg, #25A87E 0%, #2868C3 100%);
+  color: white;
+}
+
+.chakra-button[data-variant="primary"]:hover {
+  background: linear-gradient(90deg, #1F9D77 0%, #2259A8 100%);
+}
+
+/* Gold button */
+.chakra-button[data-variant="gold"] {
+  background-color: #F59E0B;
+  color: white;
+}
+
+/* Coral button */
+.chakra-button[data-variant="coral"] {
+  background-color: #F97316;
+  color: white;
+}
+
+/* Tab styling */
+.chakra-tabs__tab[aria-selected="true"] {
+  background: linear-gradient(90deg, #25A87E 0%, #2868C3 100%);
+  color: white;
+}
+
+/* Text colors */
+.chakra-heading {
+  color: #0A2756;
+}
+
+/* Card styling */
+.chakra-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Background color */
+body {
+  background-color: #F8FAFC;
+}

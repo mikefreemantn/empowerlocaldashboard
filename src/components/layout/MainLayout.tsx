@@ -1,0 +1,567 @@
+import React, { ReactNode, useState } from 'react';
+import {
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  useDisclosure,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  VStack,
+  Text,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Divider,
+  Image,
+  useColorModeValue,
+  Badge,
+  Tooltip,
+  Container,
+  useToken,
+  Button,
+} from '@chakra-ui/react';
+import { HamburgerIcon, BellIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { FiHome, FiUsers, FiFileText, FiBarChart2, FiSettings, FiLogOut, FiSearch, FiMail, FiHelpCircle, FiPlus } from 'react-icons/fi';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import ColorModeToggle from '../ui/ColorModeToggle';
+
+const MotionBox = motion(Box);
+const MotionFlex = motion(Flex);
+
+interface SidebarItemProps {
+  icon: React.ReactElement;
+  children: ReactNode;
+  href: string;
+  isActive?: boolean;
+  badge?: string | number;
+  badgeColorScheme?: string;
+}
+
+const SidebarItem = ({ 
+  icon, 
+  children, 
+  href, 
+  isActive = false,
+  badge,
+  badgeColorScheme = 'accent1'
+}: SidebarItemProps) => {
+  // Get the gradient colors for active state
+  const [primaryGradient] = useToken('gradients', ['primary']);
+  
+  // Dynamic styles based on color mode
+  const activeBg = primaryGradient;
+  const activeColor = useColorModeValue('white', 'white');
+  const inactiveBg = useColorModeValue('transparent', 'transparent');
+  const inactiveColor = useColorModeValue('text', 'gray.300');
+  const hoverBg = useColorModeValue('rgba(0, 98, 255, 0.08)', 'rgba(59, 130, 246, 0.16)');
+
+  return (
+    <Link href={href} passHref>
+      <MotionFlex
+        align="center"
+        p="4"
+        mx="4"
+        borderRadius="xl"
+        role="group"
+        cursor="pointer"
+        bgGradient={isActive ? activeBg : inactiveBg}
+        color={isActive ? activeColor : inactiveColor}
+        _hover={{
+          bg: isActive ? undefined : hoverBg,
+        }}
+        position="relative"
+        transition="all 0.2s"
+        whileHover={{ x: isActive ? 0 : 4 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <Box
+          as={motion.div}
+          initial={{ scale: 1 }}
+          animate={{ scale: isActive ? 1.2 : 1 }}
+          mr={4}
+        >
+          {React.cloneElement(icon, {
+            fontSize: "18px",
+          })}
+        </Box>
+        <Text fontWeight={isActive ? "semibold" : "medium"}>{children}</Text>
+        
+        {badge && (
+          <Badge
+            ml="auto"
+            colorScheme={badgeColorScheme}
+            borderRadius="full"
+            px={2}
+            fontSize="xs"
+          >
+            {badge}
+          </Badge>
+        )}
+      </MotionFlex>
+    </Link>
+  );
+};
+
+interface MainLayoutProps {
+  children: ReactNode;
+  title?: string;
+  activeRoute?: string;
+  showMaxWidth?: boolean;
+}
+
+const MainLayout = ({ 
+  children, 
+  title = 'Dashboard', 
+  activeRoute = '/',
+  showMaxWidth = true
+}: MainLayoutProps) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [notifications, setNotifications] = useState(3);
+
+  const sidebarItems = [
+    { name: 'Dashboard', icon: <FiHome />, href: '/' },
+    { name: 'Publications', icon: <FiFileText />, href: '/publications', badge: 3, badgeColorScheme: 'accent1' },
+    { name: 'Inventory', icon: <FiBarChart2 />, href: '/inventory' },
+    { name: 'Team', icon: <FiUsers />, href: '/team' },
+    { name: 'Analytics', icon: <FiBarChart2 />, href: '/analytics' },
+    { name: 'Settings', icon: <FiSettings />, href: '/settings' },
+  ];
+  
+  const secondarySidebarItems = [
+    { name: 'Help Center', icon: <FiHelpCircle />, href: '/help' },
+    { name: 'Messages', icon: <FiMail />, href: '/messages', badge: 5, badgeColorScheme: 'accent2' },
+  ];
+
+  // Dynamic styles based on color mode
+  const bgColor = useColorModeValue('background', 'gray.900');
+  const cardBg = useColorModeValue('card', 'gray.800');
+  const borderColor = useColorModeValue('border', 'gray.700');
+  const textColor = useColorModeValue('text', 'white');
+  const textSecondaryColor = useColorModeValue('textSecondary', 'gray.300');
+  
+  return (
+    <Box minH="100vh" bg={bgColor} transition="background-color 0.2s">
+      {/* Mobile nav */}
+      <Flex
+        px={4}
+        height="20"
+        alignItems="center"
+        bg={useColorModeValue('white', 'gray.900')}
+        borderBottomWidth="1px"
+        borderBottomColor={useColorModeValue('rgba(40, 104, 195, 0.1)', 'gray.700')}
+        justifyContent={{ base: 'space-between', md: 'flex-end' }}
+        display={{ base: 'flex', md: 'none' }}
+      >
+        <IconButton
+          variant="ghost"
+          onClick={onOpen}
+          aria-label="open menu"
+          icon={<HamburgerIcon />}
+        />
+
+        <MotionBox
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Image
+            src={useColorModeValue('/empowerlocal_black.png', '/empowerlocal_white.png')}
+            alt="EmpowerLocal"
+            width={150}
+            fallbackSrc="https://via.placeholder.com/150x40?text=EmpowerLocal"
+          />
+        </MotionBox>
+
+        <HStack>
+          {/* Publication selector for mobile */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              variant="ghost"
+              size="sm"
+              px={2}
+            >
+              <ChevronDownIcon />
+            </MenuButton>
+            <MenuList>
+              <MenuItem>Willamette Week</MenuItem>
+              <MenuItem>Portland Monthly</MenuItem>
+              <MenuItem>Portland Mercury</MenuItem>
+              <MenuItem>Portland Business Journal</MenuItem>
+              <Divider />
+              <MenuItem icon={<FiPlus />}>Add Publication</MenuItem>
+            </MenuList>
+          </Menu>
+          
+          {/* Notification icon for mobile */}
+          <Box position="relative">
+            <IconButton
+              aria-label="notifications"
+              icon={<BellIcon />}
+              variant="ghost"
+              size="sm"
+            />
+            {notifications > 0 && (
+              <Box
+                position="absolute"
+                top="-2px"
+                right="-2px"
+                px={1.5}
+                py={0.5}
+                fontSize="xs"
+                fontWeight="bold"
+                lineHeight="none"
+                color="white"
+                bg="accent1"
+                borderRadius="full"
+                transform="scale(0.9)"
+              >
+                {notifications}
+              </Box>
+            )}
+          </Box>
+          
+          {/* Color mode toggle for mobile */}
+          <ColorModeToggle size="sm" />
+        </HStack>
+      </Flex>
+
+      {/* Mobile drawer */}
+      <Drawer
+        autoFocus={false}
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        returnFocusOnClose={false}
+        onOverlayClick={onClose}
+        size="full"
+      >
+        <DrawerOverlay />
+        <DrawerContent bg={cardBg}>
+          <DrawerCloseButton />
+          <DrawerHeader borderBottomWidth="1px" borderColor={borderColor}>
+            <Image
+              src={useColorModeValue('/empowerlocal_black.png', '/empowerlocal_white.png')}
+              alt="EmpowerLocal"
+              width={150}
+              fallbackSrc="https://via.placeholder.com/150x40?text=EmpowerLocal"
+            />
+          </DrawerHeader>
+
+          <DrawerBody>
+            <VStack align="stretch" spacing={1} mt={6}>
+              {sidebarItems.map((item) => (
+                <SidebarItem
+                  key={item.name}
+                  icon={item.icon}
+                  href={item.href}
+                  isActive={activeRoute === item.href}
+                  badge={item.badge}
+                  badgeColorScheme={item.badgeColorScheme}
+                >
+                  {item.name}
+                </SidebarItem>
+              ))}
+              
+              <Divider my={6} borderColor={borderColor} opacity={0.6} />
+              
+              {secondarySidebarItems.map((item) => (
+                <SidebarItem
+                  key={item.name}
+                  icon={item.icon}
+                  href={item.href}
+                  isActive={activeRoute === item.href}
+                  badge={item.badge}
+                  badgeColorScheme={item.badgeColorScheme}
+                >
+                  {item.name}
+                </SidebarItem>
+              ))}
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Sidebar for desktop */}
+      <Box
+        bg={cardBg}
+        borderRight="1px"
+        borderRightColor={borderColor}
+        w={{ base: 'full', md: 60 }}
+        pos="fixed"
+        h="full"
+        display={{ base: 'none', md: 'block' }}
+        boxShadow="sm"
+        zIndex="10"
+        transition="background-color 0.2s, border-color 0.2s"
+      >
+        <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+          <MotionBox
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Image
+              src={useColorModeValue('/empowerlocal_black.png', '/empowerlocal_white.png')}
+              alt="EmpowerLocal"
+              width={150}
+              fallbackSrc="https://via.placeholder.com/150x40?text=EmpowerLocal"
+            />
+          </MotionBox>
+        </Flex>
+        <VStack align="stretch" spacing={1} mt={6}>
+          <MotionBox
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1
+                }
+              }
+            }}
+            initial="hidden"
+            animate="show"
+          >
+            {sidebarItems.map((item, index) => (
+              <MotionBox
+                key={item.name}
+                variants={{
+                  hidden: { opacity: 0, x: -20 },
+                  show: { opacity: 1, x: 0 }
+                }}
+              >
+                <SidebarItem
+                  icon={item.icon}
+                  href={item.href}
+                  isActive={activeRoute === item.href}
+                  badge={item.badge}
+                  badgeColorScheme={item.badgeColorScheme}
+                >
+                  {item.name}
+                </SidebarItem>
+              </MotionBox>
+            ))}
+          </MotionBox>
+          
+          <Divider my={6} borderColor={borderColor} opacity={0.6} />
+          
+          <MotionBox
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                  delayChildren: 0.3
+                }
+              }
+            }}
+            initial="hidden"
+            animate="show"
+          >
+            {secondarySidebarItems.map((item) => (
+              <MotionBox
+                key={item.name}
+                variants={{
+                  hidden: { opacity: 0, x: -20 },
+                  show: { opacity: 1, x: 0 }
+                }}
+              >
+                <SidebarItem
+                  icon={item.icon}
+                  href={item.href}
+                  isActive={activeRoute === item.href}
+                  badge={item.badge}
+                  badgeColorScheme={item.badgeColorScheme}
+                >
+                  {item.name}
+                </SidebarItem>
+              </MotionBox>
+            ))}
+          </MotionBox>
+        </VStack>
+      </Box>
+
+      {/* Desktop header */}
+      <Flex
+        ml={{ base: 0, md: 60 }}
+        px={4}
+        height="20"
+        alignItems="center"
+        bg={useColorModeValue('white', 'gray.900')}
+        borderBottomWidth="1px"
+        borderBottomColor={useColorModeValue('rgba(40, 104, 195, 0.1)', 'gray.700')}
+        justifyContent="space-between"
+        display={{ base: 'none', md: 'flex' }}
+      >
+        <Text 
+          fontSize="2xl" 
+          fontWeight="bold" 
+          color={textColor}
+          letterSpacing="tight"
+        >
+          {title}
+        </Text>
+
+        <HStack spacing={4} alignItems="center">
+          {/* Notification Icon */}
+          <Box position="relative">
+            <IconButton
+              aria-label="notifications"
+              icon={<BellIcon />}
+              variant="ghost"
+              fontSize="20px"
+            />
+            {notifications > 0 && (
+              <Box
+                position="absolute"
+                top="-2px"
+                right="-2px"
+                px={2}
+                py={1}
+                fontSize="xs"
+                fontWeight="bold"
+                lineHeight="none"
+                color="white"
+                bg="accent1"
+                borderRadius="full"
+                transform="scale(0.9)"
+                animation="pulse 2s infinite"
+                sx={{
+                  '@keyframes pulse': {
+                    '0%': { boxShadow: '0 0 0 0 rgba(255, 107, 53, 0.4)' },
+                    '70%': { boxShadow: '0 0 0 10px rgba(255, 107, 53, 0)' },
+                    '100%': { boxShadow: '0 0 0 0 rgba(255, 107, 53, 0)' }
+                  }
+                }}
+              >
+                {notifications}
+              </Box>
+            )}
+          </Box>
+          
+          {/* Color Mode Toggle */}
+          <ColorModeToggle size="md" />
+
+          {/* User Menu */}
+          <Menu>
+            <MenuButton
+              py={2}
+              transition="all 0.3s"
+              _focus={{ boxShadow: 'none' }}
+            >
+              <HStack>
+                <Avatar
+                  size="sm"
+                  name="Michael Freeman"
+                  src="https://bit.ly/dan-abramov"
+                />
+                <Text display={{ base: 'none', md: 'flex' }} fontWeight="medium">
+                  Michael Freeman
+                </Text>
+                <ChevronDownIcon />
+              </HStack>
+            </MenuButton>
+            <MenuList
+              bg={useColorModeValue('white', 'gray.900')}
+              borderColor={useColorModeValue('gray.200', 'gray.700')}
+            >
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>Settings</MenuItem>
+              <MenuItem>Billing</MenuItem>
+              <Divider />
+              <MenuItem as={Link} href="/setup" icon={<FiSettings />}>Publication Setup</MenuItem>
+              <Divider />
+              <MenuItem icon={<FiLogOut />}>Sign Out</MenuItem>
+            </MenuList>
+          </Menu>
+          
+          {/* Publication Selector */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              variant="ghost"
+              rightIcon={<ChevronDownIcon />}
+              ml={4}
+              fontWeight="medium"
+              fontSize="sm"
+            >
+              Willamette Week
+            </MenuButton>
+            <MenuList>
+              <MenuItem>Willamette Week</MenuItem>
+              <MenuItem>Portland Monthly</MenuItem>
+              <MenuItem>Portland Mercury</MenuItem>
+              <MenuItem>Portland Business Journal</MenuItem>
+              <Divider />
+              <MenuItem icon={<FiPlus />}>Add Publication</MenuItem>
+            </MenuList>
+          </Menu>
+        </HStack>
+      </Flex>
+
+      {/* Main content */}
+      <Box ml={{ base: 0, md: 60 }} p={{ base: 4, md: 6 }}>
+        {/* Mobile header */}
+        <Flex
+          mb={4}
+          alignItems="center"
+          justifyContent="space-between"
+          display={{ base: 'flex', md: 'none' }}
+        >
+          <Text 
+            fontSize="2xl" 
+            fontWeight="bold" 
+            color={textColor}
+            letterSpacing="tight"
+          >
+            {title}
+          </Text>
+          <HStack spacing={3}>
+            {/* Publication Selector for Mobile */}
+            <Menu>
+              <MenuButton
+                as={Button}
+                variant="ghost"
+                rightIcon={<ChevronDownIcon />}
+                size="sm"
+                fontWeight="medium"
+                fontSize="sm"
+              >
+                Willamette Week
+              </MenuButton>
+              <MenuList>
+                <MenuItem>Willamette Week</MenuItem>
+                <MenuItem>Portland Monthly</MenuItem>
+                <MenuItem>Portland Mercury</MenuItem>
+                <MenuItem>Portland Business Journal</MenuItem>
+                <Divider />
+                <MenuItem icon={<FiPlus />}>Add Publication</MenuItem>
+              </MenuList>
+            </Menu>
+          </HStack>
+        </Flex>
+        
+        {/* Page content */}
+        {showMaxWidth ? (
+          <Container maxW="container.xl" px={{ base: 0, md: 4 }}>
+            {children}
+          </Container>
+        ) : (
+          children
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default MainLayout;

@@ -1,0 +1,496 @@
+import { useState } from 'react';
+import {
+  Box,
+  Flex,
+  SimpleGrid,
+  Text,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Heading,
+  Stack,
+  StackDivider,
+  useColorModeValue,
+  Grid,
+  GridItem,
+  HStack,
+  VStack,
+  Badge,
+  Avatar,
+  AvatarGroup,
+} from '@chakra-ui/react';
+import { FiTrendingUp, FiUsers, FiDollarSign, FiActivity, FiPlus, FiCalendar, FiClock, FiCheckCircle } from 'react-icons/fi';
+import MainLayout from '../components/layout/MainLayout';
+import DashboardStats from '../components/dashboard/DashboardStats';
+import DashboardChart from '../components/dashboard/DashboardChart';
+import GlassCard from '../components/ui/GlassCard';
+import GradientButton from '../components/ui/GradientButton';
+import { motion } from 'framer-motion';
+
+// Sample data for demo
+const recentLeads = [
+  { id: 1, name: 'Portland Coffee Roasters', status: 'New', value: '$2,500', date: '2025-04-15' },
+  { id: 2, name: 'Powell\'s Books', status: 'Qualified', value: '$4,200', date: '2025-04-14' },
+  { id: 3, name: 'Voodoo Doughnut', status: 'Proposal', value: '$1,800', date: '2025-04-12' },
+  { id: 4, name: 'Salt & Straw', status: 'Negotiation', value: '$3,500', date: '2025-04-10' },
+  { id: 5, name: 'Stumptown Coffee', status: 'Closed', value: '$5,000', date: '2025-04-08' },
+];
+
+// Sample data for recent activity
+const recentActivity = [
+  { 
+    title: 'New campaign created', 
+    time: '2 hours ago',
+    user: 'Sarah Johnson',
+    avatar: 'https://i.pravatar.cc/150?img=1',
+    type: 'campaign'
+  },
+  { 
+    title: 'Inventory updated', 
+    time: '5 hours ago',
+    user: 'Mark Wilson',
+    avatar: 'https://i.pravatar.cc/150?img=2',
+    type: 'inventory'
+  },
+  { 
+    title: 'New advertiser joined', 
+    time: '1 day ago',
+    user: 'Emily Chen',
+    avatar: 'https://i.pravatar.cc/150?img=5',
+    type: 'user'
+  },
+  { 
+    title: 'Campaign performance report', 
+    time: '2 days ago',
+    user: 'Alex Rodriguez',
+    avatar: 'https://i.pravatar.cc/150?img=4',
+    type: 'report'
+  },
+];
+
+// Sample data for upcoming tasks
+const upcomingTasks = [
+  { 
+    title: 'Review campaign proposals', 
+    due: 'Today',
+    priority: 'High',
+    status: 'In Progress',
+    assignees: [
+      'https://i.pravatar.cc/150?img=1',
+      'https://i.pravatar.cc/150?img=2'
+    ]
+  },
+  { 
+    title: 'Update inventory pricing', 
+    due: 'Tomorrow',
+    priority: 'Medium',
+    status: 'Not Started',
+    assignees: [
+      'https://i.pravatar.cc/150?img=3'
+    ]
+  },
+  { 
+    title: 'Team meeting', 
+    due: 'May 15, 2023',
+    priority: 'Low',
+    status: 'Not Started',
+    assignees: [
+      'https://i.pravatar.cc/150?img=1',
+      'https://i.pravatar.cc/150?img=2',
+      'https://i.pravatar.cc/150?img=3',
+      'https://i.pravatar.cc/150?img=4'
+    ]
+  },
+  { 
+    title: 'Quarterly performance review', 
+    due: 'May 30, 2023',
+    priority: 'High',
+    status: 'Not Started',
+    assignees: [
+      'https://i.pravatar.cc/150?img=5',
+      'https://i.pravatar.cc/150?img=6'
+    ]
+  },
+];
+
+const MotionBox = motion(Box);
+
+const Home = () => {
+  // Dynamic colors based on color mode
+  const bgGradient = useColorModeValue(
+    'linear-gradient(to bottom, rgba(247, 250, 252, 0.8), rgba(255, 255, 255, 0))',
+    'linear-gradient(to bottom, rgba(26, 32, 44, 0.8), rgba(23, 25, 35, 0))'
+  );
+  const textColor = useColorModeValue('text', 'white');
+  const textSecondaryColor = useColorModeValue('textSecondary', 'gray.400');
+  const cardBg = useColorModeValue('card', 'gray.800');
+  const borderColor = useColorModeValue('border', 'gray.700');
+  const tabHoverBg = useColorModeValue('rgba(0, 98, 255, 0.08)', 'rgba(59, 130, 246, 0.16)');
+  
+  // Animation variants
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
+  return (
+    <MainLayout title="Dashboard">
+      {/* Hero section with gradient background */}
+      <Box 
+        position="relative" 
+        mb={8} 
+        pb={8}
+        bgGradient={bgGradient}
+        borderRadius="xl"
+        overflow="hidden"
+      >
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          px={{ base: 4, md: 8 }}
+          py={8}
+        >
+          <Flex 
+            direction={{ base: 'column', md: 'row' }} 
+            justifyContent="space-between" 
+            alignItems={{ base: 'flex-start', md: 'center' }} 
+            mb={6}
+          >
+            <Box mb={{ base: 4, md: 0 }}>
+              <Heading 
+                as="h1" 
+                fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}
+                fontWeight="bold"
+                color={textColor}
+                letterSpacing="tight"
+                mb={2}
+              >
+                Welcome back, Michael!
+              </Heading>
+              <Text color={textSecondaryColor} fontSize={{ base: 'md', md: 'lg' }}>
+                Here's what's happening with your campaigns today.
+              </Text>
+            </Box>
+            <GradientButton
+              leftIcon={<FiPlus />}
+              size="lg"
+              hoverScale={1.05}
+              glowOnHover
+            >
+              New Campaign
+            </GradientButton>
+          </Flex>
+        </MotionBox>
+      </Box>
+
+      {/* Stats Grid */}
+      <Box mb={10}>
+        <DashboardStats isGlass={false} />
+      </Box>
+
+      {/* Revenue Chart */}
+      <Box mb={10}>
+        <DashboardChart isGlass={false} />
+      </Box>
+
+      {/* Tabs for different views */}
+      <Tabs 
+        variant="soft-rounded" 
+        colorScheme="blue" 
+        mb={8}
+        isLazy
+      >
+        <TabList 
+          mb={6} 
+          borderBottom="1px solid" 
+          borderColor={borderColor}
+          pb={1}
+          overflowX="auto"
+          css={{
+            '&::-webkit-scrollbar': {
+              display: 'none',
+            },
+            scrollbarWidth: 'none',
+          }}
+        >
+          <Tab 
+            mx={1} 
+            _selected={{ 
+              color: 'primary',
+              bg: tabHoverBg,
+              fontWeight: 'semibold',
+            }}
+            _hover={{ bg: tabHoverBg }}
+            borderRadius="full"
+            px={4}
+          >
+            Overview
+          </Tab>
+          <Tab 
+            mx={1} 
+            _selected={{ 
+              color: 'primary',
+              bg: tabHoverBg,
+              fontWeight: 'semibold',
+            }}
+            _hover={{ bg: tabHoverBg }}
+            borderRadius="full"
+            px={4}
+          >
+            Campaigns
+          </Tab>
+          <Tab 
+            mx={1} 
+            _selected={{ 
+              color: 'primary',
+              bg: tabHoverBg,
+              fontWeight: 'semibold',
+            }}
+            _hover={{ bg: tabHoverBg }}
+            borderRadius="full"
+            px={4}
+          >
+            Performance
+          </Tab>
+          <Tab 
+            mx={1} 
+            _selected={{ 
+              color: 'primary',
+              bg: tabHoverBg,
+              fontWeight: 'semibold',
+            }}
+            _hover={{ bg: tabHoverBg }}
+            borderRadius="full"
+            px={4}
+          >
+            Revenue
+          </Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel px={0}>
+            <Grid templateColumns={{ base: '1fr', lg: 'repeat(2, 1fr)' }} gap={8}>
+              {/* Recent Activity */}
+              <GridItem>
+                <GlassCard>
+                  <Box p={6}>
+                    <Flex justifyContent="space-between" alignItems="center" mb={6}>
+                      <Heading size="md" fontWeight="semibold" letterSpacing="tight">
+                        Recent Activity
+                      </Heading>
+                      <Badge colorScheme="accent1" borderRadius="full" px={2}>
+                        New
+                      </Badge>
+
+          {/* Campaigns */}
+          <Card bg={bgCard} boxShadow="md" borderRadius="lg">
+            <CardHeader pb={0}>
+              <Heading size="md">Upcoming Campaigns</Heading>
+            </CardHeader>
+            <CardBody>
+              {upcomingCampaigns.map((campaign) => (
+                <Box 
+                  key={campaign.id} 
+                  p={4} 
+                  mb={3} 
+                  borderWidth="1px" 
+                  borderRadius="md"
+                  _hover={{ borderColor: 'brand.primary', shadow: 'md' }}
+                  transition="all 0.2s"
+                >
+                  <Flex justify="space-between" align="center" mb={2}>
+                    <Heading size="sm">{campaign.name}</Heading>
+                    <Badge colorScheme={getStatusColor(campaign.status)}>
+                      {campaign.status}
+                    </Badge>
+                  </Flex>
+                  <Text fontSize="sm" mb={2}>
+                    {campaign.startDate} to {campaign.endDate}
+                  </Text>
+                  <Progress 
+                    value={campaign.progress} 
+                    colorScheme={campaign.progress > 70 ? 'green' : campaign.progress > 30 ? 'blue' : 'purple'} 
+                    size="sm" 
+                    borderRadius="full" 
+                    mb={2} 
+                  />
+                  <Flex justify="space-between" align="center">
+                    <Text fontSize="xs" color="gray.500">{campaign.progress}% Complete</Text>
+                    <Button size="xs" variant="outline">Manage</Button>
+                  </Flex>
+                </Box>
+              ))}
+            </CardBody>
+            <CardFooter pt={0}>
+              <Button variant="ghost">View All Campaigns</Button>
+            </CardFooter>
+          </Card>
+        </GridItem>
+
+        {/* Right Column */}
+        <GridItem colSpan={1}>
+          {/* Quick Actions */}
+          <Card bg={bgCard} boxShadow="md" borderRadius="lg" mb={6}>
+            <CardHeader pb={0}>
+              <Heading size="md">Quick Actions</Heading>
+            </CardHeader>
+            <CardBody>
+              <SimpleGrid columns={1} spacing={3}>
+                <Button 
+                  leftIcon={<FiUsers />} 
+                  variant="primary"
+                  _hover={{ transform: 'translateY(-2px)', shadow: 'md' }}
+                  transition="all 0.2s"
+                >
+                  Add New Lead
+                </Button>
+                <Button 
+                  leftIcon={<FiActivity />} 
+                  variant="gold"
+                  _hover={{ transform: 'translateY(-2px)', shadow: 'md' }}
+                  transition="all 0.2s"
+                >
+                  Create Campaign
+                </Button>
+                <Button 
+                  leftIcon={<FiDollarSign />} 
+                  variant="coral"
+                  _hover={{ transform: 'translateY(-2px)', shadow: 'md' }}
+                  transition="all 0.2s"
+                >
+                  Generate Report
+                </Button>
+              </SimpleGrid>
+            </CardBody>
+          </Card>
+
+          {/* Activity Feed */}
+          <Card bg={bgCard} boxShadow="md" borderRadius="lg">
+            <CardHeader pb={0}>
+              <Heading size="md">Recent Activity</Heading>
+            </CardHeader>
+            <CardBody>
+              <Tabs isFitted variant="enclosed" index={activeTab} onChange={(index) => setActiveTab(index)}>
+                <TabList mb="1em">
+                  <Tab _selected={{ bgGradient: 'gradients.primary', color: 'white' }}>All</Tab>
+                  <Tab _selected={{ bgGradient: 'gradients.primary', color: 'white' }}>Mentions</Tab>
+                  <Tab _selected={{ bgGradient: 'gradients.primary', color: 'white' }}>Tasks</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel p={0}>
+                    <Flex direction="column" gap={4}>
+                      <Flex gap={3}>
+                        <Icon as={FiCheckCircle} color="green.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">Campaign Completed</Text>
+                          <Text fontSize="sm" color="gray.500">Spring Festival Guide campaign has ended with 125% ROI</Text>
+                          <Text fontSize="xs" color="gray.400">2 hours ago</Text>
+                        </Box>
+                      </Flex>
+                      
+                      <Flex gap={3}>
+                        <Icon as={FiUsers} color="blue.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">New Lead Created</Text>
+                          <Text fontSize="sm" color="gray.500">Sarah Johnson created a new lead: Pine State Biscuits</Text>
+                          <Text fontSize="xs" color="gray.400">5 hours ago</Text>
+                        </Box>
+                      </Flex>
+                      
+                      <Flex gap={3}>
+                        <Icon as={FiAlertCircle} color="orange.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">Proposal Needs Review</Text>
+                          <Text fontSize="sm" color="gray.500">Proposal for Breakside Brewery requires your approval</Text>
+                          <Text fontSize="xs" color="gray.400">Yesterday</Text>
+                        </Box>
+                      </Flex>
+                      
+                      <Flex gap={3}>
+                        <Icon as={FiTrendingUp} color="purple.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">Analytics Updated</Text>
+                          <Text fontSize="sm" color="gray.500">Monthly analytics report is now available</Text>
+                          <Text fontSize="xs" color="gray.400">Yesterday</Text>
+                        </Box>
+                      </Flex>
+                    </Flex>
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <Flex direction="column" gap={4}>
+                      <Flex gap={3}>
+                        <Icon as={FiUsers} color="blue.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">@John mentioned you</Text>
+                          <Text fontSize="sm" color="gray.500">in a comment on Powell's Books proposal</Text>
+                          <Text fontSize="xs" color="gray.400">3 hours ago</Text>
+                        </Box>
+                      </Flex>
+                      
+                      <Flex gap={3}>
+                        <Icon as={FiUsers} color="blue.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">@Sarah mentioned you</Text>
+                          <Text fontSize="sm" color="gray.500">in the Restaurant Week campaign planning</Text>
+                          <Text fontSize="xs" color="gray.400">Yesterday</Text>
+                        </Box>
+                      </Flex>
+                    </Flex>
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <Flex direction="column" gap={4}>
+                      <Flex gap={3}>
+                        <Icon as={FiAlertCircle} color="orange.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">Review Proposal</Text>
+                          <Text fontSize="sm" color="gray.500">Breakside Brewery proposal needs approval</Text>
+                          <Text fontSize="xs" color="gray.400">Due today</Text>
+                        </Box>
+                      </Flex>
+                      
+                      <Flex gap={3}>
+                        <Icon as={FiCheckCircle} color="green.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">Update Campaign Assets</Text>
+                          <Text fontSize="sm" color="gray.500">Upload new creative for Best of Portland</Text>
+                          <Text fontSize="xs" color="gray.400">Due in 2 days</Text>
+                        </Box>
+                      </Flex>
+                      
+                      <Flex gap={3}>
+                        <Icon as={FiCheckCircle} color="green.500" boxSize={5} mt={1} />
+                        <Box>
+                          <Text fontWeight="medium">Follow up with Lead</Text>
+                          <Text fontSize="sm" color="gray.500">Schedule call with Salt & Straw</Text>
+                          <Text fontSize="xs" color="gray.400">Due in 3 days</Text>
+                        </Box>
+                      </Flex>
+                    </Flex>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </CardBody>
+            <CardFooter pt={0}>
+              <Button variant="ghost">View All Activity</Button>
+            </CardFooter>
+          </Card>
+        </GridItem>
+      </Grid>
+    </MainLayout>
+  );
+};
+
+export default Home;
