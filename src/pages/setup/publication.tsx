@@ -6,7 +6,6 @@ import {
   FormLabel,
   Input,
   VStack,
-  Heading,
   Text,
   SimpleGrid,
   FormErrorMessage,
@@ -24,6 +23,7 @@ import {
 import { FiPlus } from 'react-icons/fi';
 import SetupLayout from '@/components/layout/SetupLayout';
 import { useRouter } from 'next/router';
+import Heading from '@/components/ui/Heading';
 
 // Sample publication types
 const publicationTypes = [
@@ -180,8 +180,8 @@ const PublicationSetup: React.FC = () => {
     <SetupLayout currentStep="publication">
       <VStack spacing={8} align="stretch">
         <Box>
-          <Heading size="md" mb={2}>Publication Profile</Heading>
-          <Text color="gray.500">
+          <Heading variant="h2" mb={2}>Publication Profile</Heading>
+          <Text color={useColorModeValue('gray.600', 'gray.300')}>
             Tell us about your publication. This information will be visible to advertisers and users.
           </Text>
         </Box>
@@ -190,7 +190,7 @@ const PublicationSetup: React.FC = () => {
           <VStack spacing={6} align="stretch">
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
               <FormControl isRequired isInvalid={!!errors.publicationName}>
-                <FormLabel>Publication Name</FormLabel>
+                <FormLabel color={useColorModeValue('gray.700', 'gray.200')}>Publication Name</FormLabel>
                 <Input
                   name="publicationName"
                   value={formData.publicationName}
@@ -201,7 +201,7 @@ const PublicationSetup: React.FC = () => {
               </FormControl>
               
               <FormControl isRequired isInvalid={!!errors.publicationType}>
-                <FormLabel>Publication Type</FormLabel>
+                <FormLabel color={useColorModeValue('gray.700', 'gray.200')}>Publication Type</FormLabel>
                 <Select
                   name="publicationType"
                   value={formData.publicationType}
@@ -217,7 +217,7 @@ const PublicationSetup: React.FC = () => {
             </SimpleGrid>
             
             <FormControl isRequired isInvalid={!!errors.description}>
-              <FormLabel>Publication Description</FormLabel>
+              <FormLabel color={useColorModeValue('gray.700', 'gray.200')}>Publication Description</FormLabel>
               <Textarea
                 name="description"
                 value={formData.description}
@@ -230,7 +230,7 @@ const PublicationSetup: React.FC = () => {
             
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
               <FormControl isRequired isInvalid={!!errors.website}>
-                <FormLabel>Website</FormLabel>
+                <FormLabel color={useColorModeValue('gray.700', 'gray.200')}>Website</FormLabel>
                 <Input
                   name="website"
                   value={formData.website}
@@ -241,7 +241,7 @@ const PublicationSetup: React.FC = () => {
               </FormControl>
               
               <FormControl isRequired isInvalid={!!errors.foundedYear}>
-                <FormLabel>Founded Year</FormLabel>
+                <FormLabel color={useColorModeValue('gray.700', 'gray.200')}>Founded Year</FormLabel>
                 <Input
                   name="foundedYear"
                   value={formData.foundedYear}
@@ -255,7 +255,7 @@ const PublicationSetup: React.FC = () => {
             
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
               <FormControl isRequired>
-                <FormLabel>Primary Language</FormLabel>
+                <FormLabel color={useColorModeValue('gray.700', 'gray.200')}>Primary Language</FormLabel>
                 <Select
                   name="primaryLanguage"
                   value={formData.primaryLanguage}
@@ -268,7 +268,7 @@ const PublicationSetup: React.FC = () => {
               </FormControl>
               
               <FormControl>
-                <FormLabel>Additional Languages</FormLabel>
+                <FormLabel color={useColorModeValue('gray.700', 'gray.200')}>Additional Languages</FormLabel>
                 <HStack mb={2}>
                   <Select
                     value={newLanguage}

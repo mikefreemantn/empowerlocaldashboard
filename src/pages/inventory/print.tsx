@@ -333,9 +333,6 @@ const PrintInventoryPage = () => {
                 <Table variant="simple">
                   <Thead>
                     <Tr>
-                      <Th width="40px">
-                        <Checkbox colorScheme="blue" />
-                      </Th>
                       <Th>Name</Th>
                       <Th>Size</Th>
                       <Th>Position</Th>
@@ -348,9 +345,6 @@ const PrintInventoryPage = () => {
                   <Tbody>
                     {printInventory.map((ad) => (
                       <Tr key={ad.id}>
-                        <Td>
-                          <Checkbox colorScheme="blue" />
-                        </Td>
                         <Td>
                           <Text fontWeight="medium">{ad.name}</Text>
                           <Text fontSize="sm" color={textSecondaryColor}>

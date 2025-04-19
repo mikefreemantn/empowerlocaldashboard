@@ -20,8 +20,8 @@ const Heading: React.FC<HeadingProps> = ({ variant = 'h2', children, ...props })
 
   // Use color mode value to determine the appropriate color and background
   const color = useColorModeValue(
-    variant === 'h2' ? '#0F52BA' : undefined, // Sapphire Blue for light mode (from EmpowerLocal palette)
-    variant === 'h2' ? '#F5F5F5' : undefined  // Off-White for dark mode (from EmpowerLocal palette)
+    variant === 'h2' ? '#0F52BA' : undefined, // Sapphire Blue for light mode
+    '#FFFFFF' // Always white in dark mode for all headings
   );
   
   // Gradient background for h2 in light and dark modes

@@ -307,9 +307,6 @@ const EventsInventoryPage = () => {
                 <Table variant="simple">
                   <Thead>
                     <Tr>
-                      <Th width="40px">
-                        <Checkbox colorScheme="blue" />
-                      </Th>
                       <Th>Event</Th>
                       <Th>Type</Th>
                       <Th>Location</Th>
@@ -323,9 +320,6 @@ const EventsInventoryPage = () => {
                   <Tbody>
                     {eventsInventory.map((event) => (
                       <Tr key={event.id}>
-                        <Td>
-                          <Checkbox colorScheme="blue" />
-                        </Td>
                         <Td>
                           <Text fontWeight="medium">{event.name}</Text>
                           <Text fontSize="sm" color={textSecondaryColor}>

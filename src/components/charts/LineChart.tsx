@@ -56,7 +56,6 @@ const LineChart: React.FC<LineChartProps> = ({ data, options }) => {
       y: {
         beginAtZero: true,
         grid: {
-          drawBorder: false,
           color: 'rgba(0, 0, 0, 0.05)',
         },
         ticks: {

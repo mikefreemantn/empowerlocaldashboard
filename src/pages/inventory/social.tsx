@@ -322,9 +322,6 @@ const SocialInventoryPage = () => {
                 <Table variant="simple">
                   <Thead>
                     <Tr>
-                      <Th width="40px">
-                        <Checkbox colorScheme="blue" />
-                      </Th>
                       <Th>Platform</Th>
                       <Th>Type</Th>
                       <Th>Description</Th>
@@ -338,9 +335,6 @@ const SocialInventoryPage = () => {
                   <Tbody>
                     {socialInventory.map((ad) => (
                       <Tr key={ad.id}>
-                        <Td>
-                          <Checkbox colorScheme="blue" />
-                        </Td>
                         <Td>
                           <Flex align="center">
                             <Avatar 

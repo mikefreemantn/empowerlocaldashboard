@@ -6,7 +6,6 @@ import {
   FormLabel,
   Input,
   VStack,
-  Heading,
   Text,
   SimpleGrid,
   FormErrorMessage,
@@ -15,6 +14,7 @@ import {
   InputLeftElement,
   Divider,
 } from '@chakra-ui/react';
+import Heading from '@/components/ui/Heading';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiBriefcase } from 'react-icons/fi';
 import SetupLayout from '@/components/layout/SetupLayout';
 import { useRouter } from 'next/router';
@@ -80,7 +80,7 @@ const BusinessSetup: React.FC = () => {
         setIsSubmitting(false);
         toast({
           title: 'Business information saved',
-          description: 'Your business account details have been saved successfully.',
+          description: 'Your company profile details have been saved successfully.',
           status: 'success',
           duration: 5000,
           isClosable: true,
@@ -96,16 +96,16 @@ const BusinessSetup: React.FC = () => {
     <SetupLayout currentStep="business">
       <VStack spacing={8} align="stretch">
         <Box>
-          <Heading size="md" mb={2}>Business Account</Heading>
+          <Heading variant="h2" mb={2}>Company Profile</Heading>
           <Text color="gray.500">
-            Enter your business information to get started. This information will be used for your account and billing.
+            Enter your company information to get started. This information will be used for your account and billing.
           </Text>
         </Box>
         
         <form onSubmit={handleSubmit}>
           <VStack spacing={6} align="stretch">
             <Box>
-              <Heading size="sm" mb={4}>Company Information</Heading>
+              <Heading variant="h3" mb={4}>Company Information</Heading>
               
               <FormControl isRequired isInvalid={!!errors.companyName} mb={4}>
                 <FormLabel>Company Name</FormLabel>
@@ -212,7 +212,7 @@ const BusinessSetup: React.FC = () => {
             <Divider />
             
             <Box>
-              <Heading size="sm" mb={4}>Primary Contact</Heading>
+              <Heading variant="h3" mb={4}>Primary Contact</Heading>
               
               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
                 <FormControl isRequired isInvalid={!!errors.contactName}>

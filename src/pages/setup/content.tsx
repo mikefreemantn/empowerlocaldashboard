@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   VStack,
-  Heading,
   Text,
   SimpleGrid,
   useToast,
@@ -23,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import SetupLayout from '@/components/layout/SetupLayout';
 import { useRouter } from 'next/router';
+import Heading from '@/components/ui/Heading';
 
 // Sample content categories
 const contentCategories = {
@@ -210,8 +210,8 @@ const ContentCategoriesSetup: React.FC = () => {
     <SetupLayout currentStep="content">
       <VStack spacing={8} align="stretch">
         <Box>
-          <Heading size="md" mb={2}>Content Categories</Heading>
-          <Text color="gray.500">
+          <Heading variant="h2" mb={2}>Content Categories & Audience</Heading>
+          <Text>
             Select the categories and subcategories that best describe your content. This helps advertisers find your publication.
           </Text>
         </Box>
@@ -227,7 +227,7 @@ const ContentCategoriesSetup: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <VStack spacing={8} align="stretch">
             <Box>
-              <Heading size="sm" mb={4}>Content Categories</Heading>
+              <Heading variant="h3" mb={4}>Content Categories</Heading>
               <Text fontSize="sm" color="gray.500" mb={4}>
                 Select at least one subcategory from at least 3 main categories that best represent your content.
               </Text>
@@ -287,7 +287,7 @@ const ContentCategoriesSetup: React.FC = () => {
             <Divider />
             
             <Box>
-              <Heading size="sm" mb={4}>Audience Demographics</Heading>
+              <Heading variant="h3" mb={4}>Audience Demographics</Heading>
               <Text fontSize="sm" color="gray.500" mb={4}>
                 Select at least one option from each category that best describes your audience demographics.
               </Text>

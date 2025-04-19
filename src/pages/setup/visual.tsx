@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   VStack,
-  Heading,
   Text,
   SimpleGrid,
   useToast,
@@ -22,6 +21,7 @@ import {
 import { FiUpload, FiInfo, FiX, FiCheck } from 'react-icons/fi';
 import SetupLayout from '@/components/layout/SetupLayout';
 import { useRouter } from 'next/router';
+import Heading from '@/components/ui/Heading';
 
 const VisualIdentitySetup: React.FC = () => {
   const router = useRouter();
@@ -180,7 +180,7 @@ const VisualIdentitySetup: React.FC = () => {
     <SetupLayout currentStep="visual">
       <VStack spacing={8} align="stretch">
         <Box>
-          <Heading size="md" mb={2}>Visual Identity</Heading>
+          <Heading variant="h2" mb={2}>Visual Identity</Heading>
           <Text color="gray.500">
             Upload your brand assets and set your color scheme to customize the appearance of your publication.
           </Text>
@@ -189,7 +189,7 @@ const VisualIdentitySetup: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <VStack spacing={8} align="stretch">
             <Box>
-              <Heading size="sm" mb={4}>Brand Assets</Heading>
+              <Heading variant="h3" mb={4}>Brand Assets</Heading>
               
               <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
                 {/* Logo Upload */}

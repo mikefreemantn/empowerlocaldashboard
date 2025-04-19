@@ -208,7 +208,7 @@ const PublicationsPage = () => {
             leftIcon={<FiPlus />}
             colorScheme="blue"
             as={Link}
-            href="/setup"
+            href="/setup/publication"
             bg="primary"
             color="white"
             _hover={{ bg: 'blue.600' }}
@@ -451,7 +451,7 @@ const PublicationsPage = () => {
                       size="sm"
                       variant="ghost"
                       as={Link}
-                      href={`/publications/${publication.id}/edit`}
+                      href="/setup/publication"
                     >
                       Edit
                     </Button>
@@ -460,7 +460,7 @@ const PublicationsPage = () => {
                       size="sm"
                       variant="ghost"
                       as={Link}
-                      href={`/publications/${publication.id}/analytics`}
+                      href="/analytics"
                     >
                       Analytics
                     </Button>

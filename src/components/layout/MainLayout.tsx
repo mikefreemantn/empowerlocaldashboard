@@ -30,11 +30,8 @@ import {
 import { HamburgerIcon, BellIcon, ChevronDownIcon } from '@chakra-ui/icons';
 import { FiHome, FiUsers, FiFileText, FiBarChart2, FiSettings, FiLogOut, FiSearch, FiMail, FiHelpCircle, FiPlus } from 'react-icons/fi';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import ColorModeToggle from '../ui/ColorModeToggle';
-
-const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
+import CompanySelector from '../ui/CompanySelector';
 
 interface SidebarItemProps {
   icon: React.ReactElement;
@@ -65,7 +62,7 @@ const SidebarItem = ({
 
   return (
     <Link href={href} passHref>
-      <MotionFlex
+      <Flex
         align="center"
         p="4"
         mx="4"
@@ -78,16 +75,8 @@ const SidebarItem = ({
           bg: isActive ? undefined : hoverBg,
         }}
         position="relative"
-        transition="all 0.2s"
-        whileHover={{ x: isActive ? 0 : 4 }}
-        whileTap={{ scale: 0.98 }}
       >
-        <Box
-          as={motion.div}
-          initial={{ scale: 1 }}
-          animate={{ scale: isActive ? 1.2 : 1 }}
-          mr={4}
-        >
+        <Box mr={4}>
           {React.cloneElement(icon, {
             fontSize: "18px",
           })}
@@ -105,7 +94,7 @@ const SidebarItem = ({
             {badge}
           </Badge>
         )}
-      </MotionFlex>
+      </Flex>
     </Link>
   );
 };
@@ -128,6 +117,7 @@ const MainLayout = ({
 
   const sidebarItems = [
     { name: 'Dashboard', icon: <FiHome />, href: '/' },
+    { name: 'Companies', icon: <FiFileText />, href: '/companies' },
     { name: 'Publications', icon: <FiFileText />, href: '/publications', badge: 3, badgeColorScheme: 'accent1' },
     { name: 'Inventory', icon: <FiBarChart2 />, href: '/inventory' },
     { name: 'Team', icon: <FiUsers />, href: '/team' },
@@ -167,39 +157,20 @@ const MainLayout = ({
           icon={<HamburgerIcon />}
         />
 
-        <MotionBox
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <Box>
           <Image
             src={useColorModeValue('/empowerlocal_black.png', '/empowerlocal_white.png')}
             alt="EmpowerLocal"
             width={150}
             fallbackSrc="https://via.placeholder.com/150x40?text=EmpowerLocal"
           />
-        </MotionBox>
+        </Box>
 
         <HStack>
-          {/* Publication selector for mobile */}
-          <Menu>
-            <MenuButton
-              as={Button}
-              variant="ghost"
-              size="sm"
-              px={2}
-            >
-              <ChevronDownIcon />
-            </MenuButton>
-            <MenuList>
-              <MenuItem>Willamette Week</MenuItem>
-              <MenuItem>Portland Monthly</MenuItem>
-              <MenuItem>Portland Mercury</MenuItem>
-              <MenuItem>Portland Business Journal</MenuItem>
-              <Divider />
-              <MenuItem icon={<FiPlus />}>Add Publication</MenuItem>
-            </MenuList>
-          </Menu>
+          {/* Company & Publication selector for mobile */}
+          <Box>
+            <CompanySelector />
+          </Box>
           
           {/* Notification icon for mobile */}
           <Box position="relative">
@@ -304,41 +275,19 @@ const MainLayout = ({
         transition="background-color 0.2s, border-color 0.2s"
       >
         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-          <MotionBox
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <Box>
             <Image
               src={useColorModeValue('/empowerlocal_black.png', '/empowerlocal_white.png')}
               alt="EmpowerLocal"
               width={150}
               fallbackSrc="https://via.placeholder.com/150x40?text=EmpowerLocal"
             />
-          </MotionBox>
+          </Box>
         </Flex>
         <VStack align="stretch" spacing={1} mt={6}>
-          <MotionBox
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1
-                }
-              }
-            }}
-            initial="hidden"
-            animate="show"
-          >
-            {sidebarItems.map((item, index) => (
-              <MotionBox
-                key={item.name}
-                variants={{
-                  hidden: { opacity: 0, x: -20 },
-                  show: { opacity: 1, x: 0 }
-                }}
-              >
+          <Box>
+            {sidebarItems.map((item) => (
+              <Box key={item.name}>
                 <SidebarItem
                   icon={item.icon}
                   href={item.href}
@@ -348,34 +297,15 @@ const MainLayout = ({
                 >
                   {item.name}
                 </SidebarItem>
-              </MotionBox>
+              </Box>
             ))}
-          </MotionBox>
+          </Box>
           
           <Divider my={6} borderColor={borderColor} opacity={0.6} />
           
-          <MotionBox
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1,
-                  delayChildren: 0.3
-                }
-              }
-            }}
-            initial="hidden"
-            animate="show"
-          >
+          <Box>
             {secondarySidebarItems.map((item) => (
-              <MotionBox
-                key={item.name}
-                variants={{
-                  hidden: { opacity: 0, x: -20 },
-                  show: { opacity: 1, x: 0 }
-                }}
-              >
+              <Box key={item.name}>
                 <SidebarItem
                   icon={item.icon}
                   href={item.href}
@@ -385,9 +315,9 @@ const MainLayout = ({
                 >
                   {item.name}
                 </SidebarItem>
-              </MotionBox>
+              </Box>
             ))}
-          </MotionBox>
+          </Box>
         </VStack>
       </Box>
 
@@ -435,14 +365,7 @@ const MainLayout = ({
                 bg="accent1"
                 borderRadius="full"
                 transform="scale(0.9)"
-                animation="pulse 2s infinite"
-                sx={{
-                  '@keyframes pulse': {
-                    '0%': { boxShadow: '0 0 0 0 rgba(255, 107, 53, 0.4)' },
-                    '70%': { boxShadow: '0 0 0 10px rgba(255, 107, 53, 0)' },
-                    '100%': { boxShadow: '0 0 0 0 rgba(255, 107, 53, 0)' }
-                  }
-                }}
+
               >
                 {notifications}
               </Box>
@@ -485,27 +408,10 @@ const MainLayout = ({
             </MenuList>
           </Menu>
           
-          {/* Publication Selector */}
-          <Menu>
-            <MenuButton
-              as={Button}
-              variant="ghost"
-              rightIcon={<ChevronDownIcon />}
-              ml={4}
-              fontWeight="medium"
-              fontSize="sm"
-            >
-              Willamette Week
-            </MenuButton>
-            <MenuList>
-              <MenuItem>Willamette Week</MenuItem>
-              <MenuItem>Portland Monthly</MenuItem>
-              <MenuItem>Portland Mercury</MenuItem>
-              <MenuItem>Portland Business Journal</MenuItem>
-              <Divider />
-              <MenuItem icon={<FiPlus />}>Add Publication</MenuItem>
-            </MenuList>
-          </Menu>
+          {/* Company & Publication Selector */}
+          <Box ml={4}>
+            <CompanySelector />
+          </Box>
         </HStack>
       </Flex>
 
