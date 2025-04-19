@@ -90,40 +90,7 @@ const contentCategories = {
   ],
 };
 
-// Sample audience demographics
-const audienceDemographics = {
-  'Age Groups': [
-    '18-24',
-    '25-34',
-    '35-44',
-    '45-54',
-    '55-64',
-    '65+',
-  ],
-  'Income Levels': [
-    'Under $25,000',
-    '$25,000 - $49,999',
-    '$50,000 - $74,999',
-    '$75,000 - $99,999',
-    '$100,000 - $149,999',
-    '$150,000+',
-  ],
-  'Education': [
-    'High School or Less',
-    'Some College',
-    'Associate Degree',
-    'Bachelor\'s Degree',
-    'Graduate Degree',
-  ],
-  'Geographic Focus': [
-    'Hyperlocal',
-    'City/Metro Area',
-    'Regional',
-    'State/Provincial',
-    'National',
-    'International',
-  ],
-};
+// Audience demographics section removed
 
 const ContentCategoriesSetup: React.FC = () => {
   const router = useRouter();
@@ -131,22 +98,17 @@ const ContentCategoriesSetup: React.FC = () => {
   const tagBg = useColorModeValue('blue.50', 'blue.900');
   const accordionBg = useColorModeValue('gray.50', 'gray.700');
   
-  // State for selected categories and subcategories
+  // State for selected categories
   const [selectedCategories, setSelectedCategories] = useState<Record<string, string[]>>({});
-  const [selectedDemographics, setSelectedDemographics] = useState<Record<string, string[]>>({});
   
   // Calculate total number of categories and selected categories
   const totalCategories = Object.values(contentCategories).flat().length;
   const totalSelectedCategories = Object.values(selectedCategories).flat().length;
   
-  // Calculate total number of demographics and selected demographics
-  const totalDemographics = Object.values(audienceDemographics).flat().length;
-  const totalSelectedDemographics = Object.values(selectedDemographics).flat().length;
-  
-  // Calculate overall completion percentage
-  const completionPercentage = Math.round(
-    ((totalSelectedCategories + totalSelectedDemographics) / 
-    (totalCategories + totalDemographics)) * 100
+  // Calculate completion percentage
+  const completionPercentage = Math.min(
+    100,
+    Math.round(totalSelectedCategories > 0 ? 100 : 0)
   );
   
   // Handle category selection
@@ -154,14 +116,6 @@ const ContentCategoriesSetup: React.FC = () => {
     setSelectedCategories(prev => ({
       ...prev,
       [category]: values
-    }));
-  };
-  
-  // Handle demographic selection
-  const handleDemographicChange = (demographic: string, values: string[]) => {
-    setSelectedDemographics(prev => ({
-      ...prev,
-      [demographic]: values
     }));
   };
   
@@ -175,30 +129,23 @@ const ContentCategoriesSetup: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (isFormValid()) {
-      // Simulate API call
-      setTimeout(() => {
-        // Save to local storage for demo purposes
-        localStorage.setItem('contentCategoriesSetup', JSON.stringify({
-          categories: selectedCategories,
-          demographics: selectedDemographics
-        }));
-        
-        toast({
-          title: 'Content categories saved',
-          description: 'Your content categories and audience demographics have been saved successfully.',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-        
-        // Navigate to next step
-        router.push('/setup/audience');
-      }, 1000);
+    // Validate that at least 3 main categories have subcategories selected
+    const categoriesWithSelections = Object.entries(selectedCategories)
+      .filter(([_, subcategories]) => subcategories.length > 0)
+      .length;
+    
+    if (categoriesWithSelections >= 3) {
+      // Save to local storage for demo purposes
+      localStorage.setItem('contentSetup', JSON.stringify({
+        categories: selectedCategories
+      }));
+      
+      // Navigate to the next step
+      router.push('/setup/audience');
     } else {
       toast({
-        title: 'Please complete the form',
-        description: 'Please select at least one subcategory from at least 3 main categories and at least one option from each demographic category.',
+        title: 'Incomplete Selection',
+        description: 'Please select at least one subcategory from at least 3 main categories.',
         status: 'warning',
         duration: 5000,
         isClosable: true,
@@ -210,7 +157,7 @@ const ContentCategoriesSetup: React.FC = () => {
     <SetupLayout currentStep="content">
       <VStack spacing={8} align="stretch">
         <Box>
-          <Heading variant="h2" mb={2}>Content Categories & Audience</Heading>
+          <Heading variant="h2" mb={2}>Content Categories</Heading>
           <Text>
             Select the categories and subcategories that best describe your content. This helps advertisers find your publication.
           </Text>
@@ -284,35 +231,7 @@ const ContentCategoriesSetup: React.FC = () => {
               </Box>
             </Box>
             
-            <Divider />
-            
-            <Box>
-              <Heading variant="h3" mb={4}>Audience Demographics</Heading>
-              <Text fontSize="sm" color="gray.500" mb={4}>
-                Select at least one option from each category that best describes your audience demographics.
-              </Text>
-              
-              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-                {Object.entries(audienceDemographics).map(([demographic, options]) => (
-                  <Box key={demographic} p={4} borderWidth="1px" borderRadius="md">
-                    <Text fontWeight="medium" mb={3}>{demographic}</Text>
-                    <CheckboxGroup
-                      colorScheme="blue"
-                      value={selectedDemographics[demographic] || []}
-                      onChange={(values) => handleDemographicChange(demographic, values as string[])}
-                    >
-                      <VStack align="start" spacing={2}>
-                        {options.map(option => (
-                          <Checkbox key={option} value={option}>
-                            {option}
-                          </Checkbox>
-                        ))}
-                      </VStack>
-                    </CheckboxGroup>
-                  </Box>
-                ))}
-              </SimpleGrid>
-            </Box>
+            {/* Audience Demographics section removed */}
             
             <Box pt={4}>
               <Button

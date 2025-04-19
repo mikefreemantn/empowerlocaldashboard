@@ -154,6 +154,23 @@ const EventsInventoryPage = () => {
   const [modalMode, setModalMode] = useState<'add' | 'edit'>('add');
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   
+  // State for sponsorship level modal
+  const { 
+    isOpen: isSponsorshipModalOpen, 
+    onOpen: onSponsorshipModalOpen, 
+    onClose: onSponsorshipModalClose 
+  } = useDisclosure();
+  const [sponsorshipModalMode, setSponsorshipModalMode] = useState<'add' | 'edit'>('add');
+  const [selectedSponsorshipIndex, setSelectedSponsorshipIndex] = useState<number>(-1);
+  const [sponsorshipFormData, setSponsorshipFormData] = useState({
+    name: '',
+    price: 0,
+    description: ''
+  });
+  
+  // State for drag and drop
+  const [draggedItem, setDraggedItem] = useState<number | null>(null);
+  
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -164,10 +181,10 @@ const EventsInventoryPage = () => {
     audience: '',
     status: 'Active',
     sponsorshipLevels: [
-      { name: 'Platinum', price: 5000 },
-      { name: 'Gold', price: 3000 },
-      { name: 'Silver', price: 1500 },
-      { name: 'Bronze', price: 750 },
+      { name: 'Platinum', price: 5000, description: 'Premium sponsorship with maximum visibility' },
+      { name: 'Gold', price: 3000, description: 'High visibility sponsorship package' },
+      { name: 'Silver', price: 1500, description: 'Medium visibility sponsorship package' },
+      { name: 'Bronze', price: 750, description: 'Entry-level sponsorship package' },
     ],
   });
   
@@ -183,10 +200,10 @@ const EventsInventoryPage = () => {
       audience: '',
       status: 'Active',
       sponsorshipLevels: [
-        { name: 'Platinum', price: 5000 },
-        { name: 'Gold', price: 3000 },
-        { name: 'Silver', price: 1500 },
-        { name: 'Bronze', price: 750 },
+        { name: 'Platinum', price: 5000, description: 'Premium sponsorship with maximum visibility' },
+        { name: 'Gold', price: 3000, description: 'High visibility sponsorship package' },
+        { name: 'Silver', price: 1500, description: 'Medium visibility sponsorship package' },
+        { name: 'Bronze', price: 750, description: 'Entry-level sponsorship package' },
       ],
     });
     onOpen();
@@ -216,6 +233,112 @@ const EventsInventoryPage = () => {
       ...formData,
       [name]: value,
     });
+  };
+  
+  // Handle sponsorship form input changes
+  const handleSponsorshipInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setSponsorshipFormData({
+      ...sponsorshipFormData,
+      [name]: name === 'price' ? Number(value) : value,
+    });
+  };
+  
+  // Handle opening add sponsorship level modal
+  const handleAddSponsorshipLevel = () => {
+    setSponsorshipModalMode('add');
+    setSponsorshipFormData({
+      name: '',
+      price: 0,
+      description: ''
+    });
+    onSponsorshipModalOpen();
+  };
+  
+  // Handle opening edit sponsorship level modal
+  const handleEditSponsorshipLevel = (index: number) => {
+    setSponsorshipModalMode('edit');
+    setSelectedSponsorshipIndex(index);
+    const level = formData.sponsorshipLevels[index];
+    setSponsorshipFormData({
+      name: level.name,
+      price: level.price,
+      description: level.description || ''
+    });
+    onSponsorshipModalOpen();
+  };
+  
+  // Handle deleting sponsorship level
+  const handleDeleteSponsorshipLevel = (index: number) => {
+    const updatedLevels = [...formData.sponsorshipLevels];
+    updatedLevels.splice(index, 1);
+    setFormData({
+      ...formData,
+      sponsorshipLevels: updatedLevels
+    });
+  };
+  
+  // Handle drag start
+  const handleDragStart = (index: number) => {
+    setDraggedItem(index);
+  };
+  
+  // Handle drag over
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+  
+  // Handle drop
+  const handleDrop = (index: number) => {
+    if (draggedItem === null) return;
+    
+    const updatedLevels = [...formData.sponsorshipLevels];
+    const draggedItemContent = updatedLevels[draggedItem];
+    
+    // Remove the dragged item
+    updatedLevels.splice(draggedItem, 1);
+    
+    // Add it at the new position
+    updatedLevels.splice(index, 0, draggedItemContent);
+    
+    // Update the state
+    setFormData({
+      ...formData,
+      sponsorshipLevels: updatedLevels
+    });
+    
+    setDraggedItem(null);
+  };
+  
+  // Handle drag end
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+  };
+  
+  // Handle sponsorship form submission
+  const handleSponsorshipSubmit = () => {
+    const updatedLevels = [...formData.sponsorshipLevels];
+    
+    if (sponsorshipModalMode === 'add') {
+      updatedLevels.push({
+        name: sponsorshipFormData.name,
+        price: sponsorshipFormData.price,
+        description: sponsorshipFormData.description
+      });
+    } else {
+      updatedLevels[selectedSponsorshipIndex] = {
+        name: sponsorshipFormData.name,
+        price: sponsorshipFormData.price,
+        description: sponsorshipFormData.description
+      };
+    }
+    
+    setFormData({
+      ...formData,
+      sponsorshipLevels: updatedLevels
+    });
+    
+    onSponsorshipModalClose();
   };
   
   // Handle form submission
@@ -358,6 +481,7 @@ const EventsInventoryPage = () => {
                                   idx === 2 ? 'gray' : 
                                   'orange'
                                 }
+                                title={level.description || ''}
                               >
                                 {level.name}: ${level.price}
                               </Tag>
@@ -501,12 +625,25 @@ const EventsInventoryPage = () => {
               </FormControl>
               
               <Box>
-                <FormLabel>Sponsorship Levels</FormLabel>
+                <Flex justify="space-between" align="center" mb={3}>
+                  <FormLabel mb={0}>Sponsorship Levels</FormLabel>
+                  <Button
+                    size="sm"
+                    leftIcon={<FiPlus />}
+                    colorScheme="blue"
+                    onClick={handleAddSponsorshipLevel}
+                    bg="primary"
+                    color="white"
+                    _hover={{ bg: 'blue.600' }}
+                  >
+                    Add Level
+                  </Button>
+                </Flex>
                 <Text fontSize="sm" color={textSecondaryColor} mb={3}>
                   Sponsorship tiers available for this event
                 </Text>
                 
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                <VStack spacing={4} align="stretch" width="100%">
                   {formData.sponsorshipLevels.map((level, idx) => (
                     <Box
                       key={idx}
@@ -514,17 +651,59 @@ const EventsInventoryPage = () => {
                       borderRadius="md"
                       p={3}
                       borderColor={borderColor}
+                      bg={draggedItem === idx ? 'gray.100' : cardBg}
+                      draggable
+                      onDragStart={() => handleDragStart(idx)}
+                      onDragOver={handleDragOver}
+                      onDrop={() => handleDrop(idx)}
+                      onDragEnd={handleDragEnd}
+                      cursor="move"
+                      transition="background-color 0.2s"
+                      _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}
+                      position="relative"
                     >
-                      <Flex justify="space-between" align="center">
-                        <Text fontWeight="medium">{level.name}</Text>
-                        <Flex align="center">
-                          <Icon as={FiDollarSign} mr={1} />
-                          <Text>{level.price}</Text>
-                        </Flex>
+                      <Flex justify="space-between" align="flex-start">
+                        <Box flex="1">
+                          <Flex align="center" mb={2}>
+                            <Icon as={FiDollarSign} mr={1} color="green.500" />
+                            <Text fontWeight="bold" fontSize="lg">{level.name} - ${level.price}</Text>
+                          </Flex>
+                          {level.description && (
+                            <Text fontSize="sm" color={textSecondaryColor}>
+                              {level.description}
+                            </Text>
+                          )}
+                        </Box>
+                        <HStack spacing={1}>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleEditSponsorshipLevel(idx)}
+                          >
+                            <Icon as={FiEdit} />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            colorScheme="red"
+                            onClick={() => handleDeleteSponsorshipLevel(idx)}
+                          >
+                            <Icon as={FiTrash2} />
+                          </Button>
+                        </HStack>
                       </Flex>
+                      <Text 
+                        position="absolute" 
+                        top="3px" 
+                        right="80px" 
+                        fontSize="xs" 
+                        color="gray.500"
+                      >
+                        Drag to reorder
+                      </Text>
                     </Box>
                   ))}
-                </SimpleGrid>
+                </VStack>
               </Box>
             </VStack>
           </ModalBody>
@@ -541,6 +720,78 @@ const EventsInventoryPage = () => {
               _hover={{ bg: 'blue.600' }}
             >
               {modalMode === 'add' ? 'Add Event' : 'Save Changes'}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      
+      {/* Add/Edit Sponsorship Level Modal */}
+      <Modal isOpen={isSponsorshipModalOpen} onClose={onSponsorshipModalClose} size="md">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            {sponsorshipModalMode === 'add' ? 'Add Sponsorship Level' : 'Edit Sponsorship Level'}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={4} align="stretch">
+              <FormControl isRequired>
+                <FormLabel>Level Name</FormLabel>
+                <Input
+                  name="name"
+                  value={sponsorshipFormData.name}
+                  onChange={handleSponsorshipInputChange}
+                  placeholder="e.g., Platinum, Gold, Silver"
+                />
+              </FormControl>
+              
+              <FormControl isRequired>
+                <FormLabel>Price ($)</FormLabel>
+                <NumberInput
+                  min={0}
+                  value={sponsorshipFormData.price}
+                  onChange={(valueString) => {
+                    setSponsorshipFormData({
+                      ...sponsorshipFormData,
+                      price: Number(valueString)
+                    });
+                  }}
+                >
+                  <NumberInputField
+                    name="price"
+                    placeholder="Sponsorship price"
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+              
+              <FormControl>
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                  name="description"
+                  value={sponsorshipFormData.description}
+                  onChange={handleSponsorshipInputChange}
+                  placeholder="Brief description of what's included in this sponsorship level"
+                />
+              </FormControl>
+            </VStack>
+          </ModalBody>
+          
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={onSponsorshipModalClose}>
+              Cancel
+            </Button>
+            <Button 
+              colorScheme="blue" 
+              onClick={handleSponsorshipSubmit}
+              bg="primary"
+              color="white"
+              _hover={{ bg: 'blue.600' }}
+            >
+              {sponsorshipModalMode === 'add' ? 'Add Level' : 'Save Changes'}
             </Button>
           </ModalFooter>
         </ModalContent>

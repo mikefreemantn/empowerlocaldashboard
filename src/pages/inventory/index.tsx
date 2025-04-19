@@ -116,6 +116,7 @@ const adSizeOptions = [
   { value: '320x100', label: 'Mobile Banner (320x100)' },
   { value: '970x250', label: 'Billboard (970x250)' },
   { value: '600x400', label: 'Popup (600x400)' },
+  { value: 'custom', label: 'Custom Size' },
 ];
 
 // Ad position options
@@ -185,6 +186,8 @@ const InventoryPage = () => {
     position: '',
     price: '',
     status: 'Active',
+    customWidth: '',
+    customHeight: '',
   });
   
   // Handle opening add modal
@@ -197,6 +200,8 @@ const InventoryPage = () => {
       position: '',
       price: '',
       status: 'Active',
+      customWidth: '',
+      customHeight: '',
     });
     setSelectedTemplate(null);
     onOpen();
@@ -206,14 +211,33 @@ const InventoryPage = () => {
   const handleEditAd = (ad: any) => {
     setModalMode('edit');
     setSelectedAd(ad);
+    
+    // Check if the size is a custom size
+    const isCustomSize = !adSizeOptions.some(option => 
+      option.value === ad.size && option.value !== 'custom'
+    );
+    
+    // Parse width and height if it's a custom size
+    let customWidth = '';
+    let customHeight = '';
+    
+    if (isCustomSize) {
+      const [width, height] = ad.size.split('x');
+      customWidth = width;
+      customHeight = height;
+    }
+    
     setFormData({
       name: ad.name,
       description: ad.description,
-      size: ad.size,
+      size: isCustomSize ? 'custom' : ad.size,
       position: ad.position,
       price: ad.price.toString(),
       status: ad.status,
+      customWidth,
+      customHeight,
     });
+    
     setSelectedTemplate(ad.size);
     onOpen();
   };
@@ -248,8 +272,16 @@ const InventoryPage = () => {
   
   // Handle form submission
   const handleSubmit = () => {
+    // Prepare the data for submission
+    const dataToSubmit = { ...formData };
+    
+    // If custom size is selected, use the custom dimensions
+    if (formData.size === 'custom' && formData.customWidth && formData.customHeight) {
+      dataToSubmit.size = `${formData.customWidth}x${formData.customHeight}`;
+    }
+    
     // In a real app, this would save to the backend
-    console.log('Saving ad:', formData);
+    console.log('Saving ad:', dataToSubmit);
     onClose();
   };
   
@@ -456,6 +488,51 @@ const InventoryPage = () => {
                   ))}
                 </Select>
               </FormControl>
+              
+              {/* Custom Size Fields */}
+              {formData.size === 'custom' && (
+                <SimpleGrid columns={2} spacing={4}>
+                  <FormControl isRequired>
+                    <FormLabel>Width (px)</FormLabel>
+                    <NumberInput
+                      min={1}
+                      value={formData.customWidth}
+                      onChange={(value) => {
+                        setFormData({
+                          ...formData,
+                          customWidth: value
+                        });
+                      }}
+                    >
+                      <NumberInputField placeholder="Width in pixels" />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
+                  
+                  <FormControl isRequired>
+                    <FormLabel>Height (px)</FormLabel>
+                    <NumberInput
+                      min={1}
+                      value={formData.customHeight}
+                      onChange={(value) => {
+                        setFormData({
+                          ...formData,
+                          customHeight: value
+                        });
+                      }}
+                    >
+                      <NumberInputField placeholder="Height in pixels" />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
+                </SimpleGrid>
+              )}
               
               <FormControl>
                 <FormLabel>Position</FormLabel>

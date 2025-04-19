@@ -54,7 +54,7 @@ import {
   Stack,
   Divider,
 } from '@chakra-ui/react';
-import { FiSearch, FiPlus, FiEdit, FiTrash2, FiHeadphones, FiMic, FiClock, FiUsers, FiRadio } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiEdit, FiTrash2, FiHeadphones, FiMic, FiClock, FiUsers, FiRadio, FiDollarSign } from 'react-icons/fi';
 import MainLayout from '@/components/layout/MainLayout';
 
 // Sample podcasts inventory data
@@ -179,6 +179,20 @@ const PodcastsInventoryPage = () => {
   } = useDisclosure();
   const [selectedAdPodcast, setSelectedAdPodcast] = useState<any>(null);
   
+  // State for ad type modal
+  const {
+    isOpen: isAdTypeModalOpen,
+    onOpen: onAdTypeModalOpen,
+    onClose: onAdTypeModalClose
+  } = useDisclosure();
+  const [adTypeModalMode, setAdTypeModalMode] = useState<'add' | 'edit'>('add');
+  const [selectedAdTypeIndex, setSelectedAdTypeIndex] = useState<number>(-1);
+  const [adTypeFormData, setAdTypeFormData] = useState({
+    name: '',
+    duration: '',
+    price: 0
+  });
+  
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -251,6 +265,83 @@ const PodcastsInventoryPage = () => {
       ...formData,
       episodes: valueString,
     });
+  };
+  
+  // Handle opening add ad type modal
+  const handleAddAdType = () => {
+    setAdTypeModalMode('add');
+    setAdTypeFormData({
+      name: '',
+      duration: '',
+      price: 0
+    });
+    onAdTypeModalOpen();
+  };
+  
+  // Handle opening edit ad type modal
+  const handleEditAdType = (index: number) => {
+    setAdTypeModalMode('edit');
+    setSelectedAdTypeIndex(index);
+    const adType = formData.adTypes[index];
+    setAdTypeFormData({
+      name: adType.name,
+      duration: adType.duration,
+      price: adType.price
+    });
+    onAdTypeModalOpen();
+  };
+  
+  // Handle deleting ad type
+  const handleDeleteAdType = (index: number) => {
+    const updatedAdTypes = [...formData.adTypes];
+    updatedAdTypes.splice(index, 1);
+    setFormData({
+      ...formData,
+      adTypes: updatedAdTypes
+    });
+  };
+  
+  // Handle ad type form input changes
+  const handleAdTypeInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setAdTypeFormData({
+      ...adTypeFormData,
+      [name]: name === 'price' ? Number(value) : value,
+    });
+  };
+  
+  // Handle ad type price change
+  const handleAdTypePriceChange = (valueString: string) => {
+    setAdTypeFormData({
+      ...adTypeFormData,
+      price: Number(valueString),
+    });
+  };
+  
+  // Handle ad type form submission
+  const handleAdTypeSubmit = () => {
+    const updatedAdTypes = [...formData.adTypes];
+    
+    if (adTypeModalMode === 'add') {
+      updatedAdTypes.push({
+        name: adTypeFormData.name,
+        duration: adTypeFormData.duration,
+        price: adTypeFormData.price
+      });
+    } else {
+      updatedAdTypes[selectedAdTypeIndex] = {
+        name: adTypeFormData.name,
+        duration: adTypeFormData.duration,
+        price: adTypeFormData.price
+      };
+    }
+    
+    setFormData({
+      ...formData,
+      adTypes: updatedAdTypes
+    });
+    
+    onAdTypeModalClose();
   };
   
   // Handle form submission
@@ -588,12 +679,25 @@ const PodcastsInventoryPage = () => {
               </FormControl>
               
               <Box>
-                <FormLabel>Ad Types</FormLabel>
+                <Flex justify="space-between" align="center" mb={3}>
+                  <FormLabel mb={0}>Ad Types</FormLabel>
+                  <Button
+                    size="sm"
+                    leftIcon={<FiPlus />}
+                    colorScheme="blue"
+                    onClick={handleAddAdType}
+                    bg="primary"
+                    color="white"
+                    _hover={{ bg: 'blue.600' }}
+                  >
+                    Add Ad Type
+                  </Button>
+                </Flex>
                 <Text fontSize="sm" color={textSecondaryColor} mb={3}>
                   Available ad types for this podcast
                 </Text>
                 
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                <VStack spacing={3} align="stretch">
                   {formData.adTypes.map((adType, idx) => (
                     <Box
                       key={idx}
@@ -601,15 +705,55 @@ const PodcastsInventoryPage = () => {
                       borderRadius="md"
                       p={3}
                       borderColor={borderColor}
+                      position="relative"
                     >
-                      <Text fontWeight="medium">{adType.name}</Text>
-                      <Flex justify="space-between" mt={1}>
-                        <Text fontSize="sm" color={textSecondaryColor}>{adType.duration}</Text>
-                        <Text fontSize="sm" fontWeight="medium">${adType.price}</Text>
+                      <Flex justify="space-between" align="center">
+                        <Box>
+                          <Text fontWeight="medium">{adType.name}</Text>
+                          <Flex mt={1}>
+                            <Text fontSize="sm" color={textSecondaryColor} mr={4}>
+                              <Icon as={FiClock} mr={1} />
+                              {adType.duration}
+                            </Text>
+                            <Text fontSize="sm" fontWeight="medium" color="green.600">
+                              <Icon as={FiDollarSign} mr={1} />
+                              {adType.price}
+                            </Text>
+                          </Flex>
+                        </Box>
+                        <HStack spacing={1}>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleEditAdType(idx)}
+                          >
+                            <Icon as={FiEdit} />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            colorScheme="red"
+                            onClick={() => handleDeleteAdType(idx)}
+                          >
+                            <Icon as={FiTrash2} />
+                          </Button>
+                        </HStack>
                       </Flex>
                     </Box>
                   ))}
-                </SimpleGrid>
+                  
+                  {formData.adTypes.length === 0 && (
+                    <Box 
+                      p={4} 
+                      borderWidth="1px" 
+                      borderRadius="md" 
+                      borderStyle="dashed"
+                      textAlign="center"
+                    >
+                      <Text color="gray.500">No ad types added yet. Click "Add Ad Type" to create one.</Text>
+                    </Box>
+                  )}
+                </VStack>
               </Box>
             </VStack>
           </ModalBody>
@@ -745,6 +889,94 @@ const PodcastsInventoryPage = () => {
               _hover={{ bg: 'blue.600' }}
             >
               Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      
+      {/* Add/Edit Ad Type Modal */}
+      <Modal isOpen={isAdTypeModalOpen} onClose={onAdTypeModalClose} size="md">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            {adTypeModalMode === 'add' ? 'Add New Ad Type' : 'Edit Ad Type'}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={4} align="stretch">
+              <FormControl isRequired>
+                <FormLabel>Ad Type Name</FormLabel>
+                <Input
+                  name="name"
+                  value={adTypeFormData.name}
+                  onChange={handleAdTypeInputChange}
+                  placeholder="e.g., Pre-roll, Mid-roll, Sponsored segment"
+                />
+              </FormControl>
+              
+              <FormControl isRequired>
+                <FormLabel>Duration</FormLabel>
+                <Select
+                  name="duration"
+                  value={adTypeFormData.duration}
+                  onChange={handleAdTypeInputChange}
+                  placeholder="Select duration"
+                >
+                  <option value="15 sec">15 seconds</option>
+                  <option value="30 sec">30 seconds</option>
+                  <option value="45 sec">45 seconds</option>
+                  <option value="60 sec">60 seconds (1 minute)</option>
+                  <option value="90 sec">90 seconds</option>
+                  <option value="2 min">2 minutes</option>
+                  <option value="3 min">3 minutes</option>
+                  <option value="5 min">5 minutes</option>
+                  <option value="10 min">10 minutes</option>
+                  <option value="Custom">Custom</option>
+                </Select>
+              </FormControl>
+              
+              {adTypeFormData.duration === 'Custom' && (
+                <FormControl isRequired>
+                  <FormLabel>Custom Duration</FormLabel>
+                  <Input
+                    name="duration"
+                    value={adTypeFormData.duration === 'Custom' ? '' : adTypeFormData.duration}
+                    onChange={handleAdTypeInputChange}
+                    placeholder="e.g., 7 min 30 sec"
+                  />
+                </FormControl>
+              )}
+              
+              <FormControl isRequired>
+                <FormLabel>Price ($)</FormLabel>
+                <NumberInput
+                  min={0}
+                  value={adTypeFormData.price}
+                  onChange={handleAdTypePriceChange}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+            </VStack>
+          </ModalBody>
+          
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={onAdTypeModalClose}>
+              Cancel
+            </Button>
+            <Button 
+              colorScheme="blue" 
+              onClick={handleAdTypeSubmit}
+              bg="primary"
+              color="white"
+              _hover={{ bg: 'blue.600' }}
+              isDisabled={!adTypeFormData.name || !adTypeFormData.duration || adTypeFormData.price <= 0}
+            >
+              {adTypeModalMode === 'add' ? 'Add Ad Type' : 'Save Changes'}
             </Button>
           </ModalFooter>
         </ModalContent>

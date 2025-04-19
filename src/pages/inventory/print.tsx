@@ -187,6 +187,9 @@ const PrintInventoryPage = () => {
     availableIssues: '',
     price: '',
     status: 'Active',
+    customWidth: '',
+    customHeight: '',
+    customUnit: 'inches', // Default unit for custom sizes
   });
   
   // Handle opening add modal
@@ -200,6 +203,9 @@ const PrintInventoryPage = () => {
       availableIssues: '',
       price: '',
       status: 'Active',
+      customWidth: '',
+      customHeight: '',
+      customUnit: 'inches',
     });
     setSelectedTemplate(null);
     onOpen();
@@ -209,15 +215,42 @@ const PrintInventoryPage = () => {
   const handleEditAd = (ad: any) => {
     setModalMode('edit');
     setSelectedAd(ad);
+    
+    // Check if the size is a custom size (not in standard options)
+    const isCustomSize = !printAdSizeOptions.some(option => 
+      option.value === ad.size && option.value !== 'Custom'
+    );
+    
+    // Parse width, height and unit if it's a custom size
+    let customWidth = '';
+    let customHeight = '';
+    let customUnit = 'inches';
+    
+    if (isCustomSize) {
+      // Parse custom size format (e.g., "5x7 inches" or "10x12 cm")
+      const sizeMatch = ad.size.match(/([\d.]+)\s*x\s*([\d.]+)\s*(inches|cm|mm)?/i);
+      if (sizeMatch) {
+        customWidth = sizeMatch[1];
+        customHeight = sizeMatch[2];
+        if (sizeMatch[3]) {
+          customUnit = sizeMatch[3].toLowerCase();
+        }
+      }
+    }
+    
     setFormData({
       name: ad.name,
       description: ad.description,
-      size: ad.size,
+      size: isCustomSize ? 'Custom' : ad.size,
       position: ad.position,
       availableIssues: ad.availableIssues,
       price: ad.price.toString(),
       status: ad.status,
+      customWidth,
+      customHeight,
+      customUnit,
     });
+    
     setSelectedTemplate(ad.size);
     onOpen();
   };
@@ -252,8 +285,16 @@ const PrintInventoryPage = () => {
   
   // Handle form submission
   const handleSubmit = () => {
+    // Prepare the data for submission
+    const dataToSubmit = { ...formData };
+    
+    // If custom size is selected, use the custom dimensions
+    if (formData.size === 'Custom' && formData.customWidth && formData.customHeight) {
+      dataToSubmit.size = `${formData.customWidth}x${formData.customHeight} ${formData.customUnit}`;
+    }
+    
     // In a real app, this would save to the backend
-    console.log('Saving print ad:', formData);
+    console.log('Saving ad:', dataToSubmit);
     onClose();
   };
   
@@ -462,6 +503,71 @@ const PrintInventoryPage = () => {
                   ))}
                 </Select>
               </FormControl>
+              
+              {/* Custom Size Fields */}
+              {formData.size === 'Custom' && (
+                <Box p={3} borderWidth="1px" borderRadius="md" bg="gray.50" mt={2}>
+                  <Text fontWeight="medium" mb={3}>Custom Size Dimensions</Text>
+                  <SimpleGrid columns={3} spacing={4}>
+                    <FormControl isRequired>
+                      <FormLabel>Width</FormLabel>
+                      <NumberInput
+                        min={0.1}
+                        step={0.1}
+                        precision={2}
+                        value={formData.customWidth}
+                        onChange={(value) => {
+                          setFormData({
+                            ...formData,
+                            customWidth: value
+                          });
+                        }}
+                      >
+                        <NumberInputField placeholder="Width" />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
+                    
+                    <FormControl isRequired>
+                      <FormLabel>Height</FormLabel>
+                      <NumberInput
+                        min={0.1}
+                        step={0.1}
+                        precision={2}
+                        value={formData.customHeight}
+                        onChange={(value) => {
+                          setFormData({
+                            ...formData,
+                            customHeight: value
+                          });
+                        }}
+                      >
+                        <NumberInputField placeholder="Height" />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                    </FormControl>
+                    
+                    <FormControl>
+                      <FormLabel>Unit</FormLabel>
+                      <Select
+                        name="customUnit"
+                        value={formData.customUnit}
+                        onChange={handleInputChange}
+                      >
+                        <option value="inches">inches</option>
+                        <option value="cm">cm</option>
+                        <option value="mm">mm</option>
+                      </Select>
+                    </FormControl>
+                  </SimpleGrid>
+                </Box>
+              )}
               
               <FormControl>
                 <FormLabel>Position</FormLabel>

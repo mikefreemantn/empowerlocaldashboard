@@ -556,18 +556,7 @@ const AudienceInfoSetup = () => {
                     </Box>
                   ))}
                   
-                  {/* Add Newsletter Button at bottom */}
-                  <Box textAlign="center" py={6}>
-                    <Button
-                      colorScheme="blue"
-                      size="lg"
-                      leftIcon={<span>+</span>}
-                      onClick={handleAddNewsletter}
-                      boxShadow="md"
-                    >
-                      Add Newsletter
-                    </Button>
-                  </Box>
+                  {/* Bottom Add Newsletter button removed */}
                 </VStack>
               </Box>
             </TabPanel>
